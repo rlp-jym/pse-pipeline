@@ -13,7 +13,7 @@ client = supabase.create_client(SUPABASE_URL, SUPABASE_KEY)
 
 HISTORY_DIR = "Price"  
 BASE_URL = "https://edge.pse.com.ph"
-RATE_LIMIT_SEC = 1
+RATE_LIMIT_SEC = 0.75
 
 os.makedirs(HISTORY_DIR, exist_ok=True)
 
