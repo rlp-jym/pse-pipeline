@@ -144,7 +144,7 @@ def save_parquet(symbol, new_df):
 def upload_to_supabase(symbol):
     path = os.path.join(HISTORY_DIR, f"{symbol}.parquet")
     with open(path, "rb") as f:
-        client.storage.from_("pse").upload(
+        client.storage.from_("pse-price").upload(
             f"{symbol}.parquet",
             f,
             {"upsert": "true"}  # overwrite if exists
