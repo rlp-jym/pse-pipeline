@@ -10,4 +10,10 @@ dependencies = [
     "lab>=8.9",
     "pandas>=3.0.3",
     "pyarrow>=24.0.0",
+    "supabase>=2.31.0",
+]
+
+[dependency-groups]
+dev = [
+    "duckcli>=0.2.1",
 ]
