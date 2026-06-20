@@ -115,6 +115,7 @@ def download_prices(company):
                 "High": item.get("HIGH"),
                 "Low": item.get("LOW"),
                 "Close": item.get("CLOSE"),
+                "Value": item.get("VALUE"),
             })
         except:
             continue
