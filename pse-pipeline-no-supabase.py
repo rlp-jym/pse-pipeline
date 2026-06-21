@@ -112,7 +112,7 @@ def download_prices(company):
                 "Close": item.get("CLOSE"),
                 "Value": item.get("VALUE"),
             })
-        except:
+        except (KeyError, ValueError):
             continue
 
     return pd.DataFrame(records) if records else None
@@ -127,7 +127,7 @@ def save_parquet(symbol, new_df):
         new_df = pd.concat([existing, new_df], ignore_index=True)
 
     new_df["Date"] = pd.to_datetime(new_df["Date"])
-    nwe_df = (new_df
+    new_df = (new_df
         .drop_duplicates("Date", keep="last")
         .sort_values("Date")
         .reset_index(drop=True)
