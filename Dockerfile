@@ -3,5 +3,5 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
 WORKDIR /app
 COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen
-COPY pse-pipeline.py .
-CMD ["uv", "run", "python", "pse-pipeline.py"]
+COPY pse_pipeline_price.py pse_pipeline_meta.py .
+CMD ["uv", "run", "python", "pse_pipeline_price.py"]

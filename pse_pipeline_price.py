@@ -1,26 +1,21 @@
 import os
-import re                   
+import re
 import time
 import supabase
-import requests             
+import requests
 import pandas as pd
 from datetime import date, datetime, timedelta
 from bs4 import BeautifulSoup   
 
-SUPABASE_URL = os.environ["SUPABASE_URL"]
-SUPABASE_KEY = os.environ["SUPABASE_KEY"]
-client = supabase.create_client(SUPABASE_URL, SUPABASE_KEY)
-
-HISTORY_DIR = "Price"  
-BASE_URL = "https://edge.pse.com.ph"
-RATE_LIMIT_SEC = 0.75
-
-os.makedirs(HISTORY_DIR, exist_ok=True)
-
+supabase_url = os.environ["supabase_url"]
+supabase_key = os.environ["supabase_key"]
+client = supabase.create_client(supabase_url, supabase_key)
+base_url = "https://edge.pse.com.ph"
+price_dir = "Price"  
+os.makedirs(price_dir, exist_ok=True)
 session = requests.Session()
 session.headers.update({"User-Agent": "Mozilla/5.0"}) 
-
-# Step 1: Get company list
+request_delay = 1
 
 def get_company_list():
     companies = []
@@ -28,8 +23,8 @@ def get_company_list():
     page = 1
 
     while True:     
-        url = BASE_URL + f"/companyDirectory/search.ax?pageNo={page}"
-        resp = session.get(url, headers={"Referer": BASE_URL + "/companyDirectory/form.do"})
+        url = base_url + f"/companyDirectory/search.ax?pageNo={page}"
+        resp = session.get(url, headers={"Referer": base_url + "/companyDirectory/form.do"})
         soup = BeautifulSoup(resp.text, "html.parser")
         rows = soup.select("table.list tbody tr")
 
@@ -64,15 +59,13 @@ def get_company_list():
         if new_on_page == 0:
             break       
         page += 1
-        time.sleep(RATE_LIMIT_SEC)
+        time.sleep(request_delay)
 
-    print(f"Found {len(companies)} companies")
+    print(f"Found {len(companies)} companies\n")
     return companies
 
-# Step 2: Smart start date
-
 def get_start_date(symbol):
-    path = os.path.join(HISTORY_DIR, f"{symbol}.parquet")
+    path = os.path.join(price_dir, f"{symbol}.parquet")
 
     if not os.path.exists(path):
         return "01-01-1800"
@@ -83,8 +76,6 @@ def get_start_date(symbol):
 
     last_date = pd.to_datetime(df["Date"]).max() 
     return (last_date - timedelta(days=15)).strftime("%m-%d-%Y")
-
-# Step 3: Download prices for one company
 
 def download_prices(company):
     symbol = company["symbol"]
@@ -97,10 +88,10 @@ def download_prices(company):
     }
 
     resp = session.post(
-        BASE_URL + "/common/DisclosureCht.ax",
+        base_url + "/common/DisclosureCht.ax",
         json=payload,
         headers={
-            "Referer": BASE_URL + "/companyPage/stockData.do",
+            "Referer": base_url + "/companyPage/stockData.do",
             "X-Requested-With": "XMLHttpRequest"
         }
     )
@@ -122,10 +113,8 @@ def download_prices(company):
 
     return pd.DataFrame(records) if records else None
 
-# Step 4. Save as parquet
-
 def save_parquet(symbol, new_df):
-    path = os.path.join(HISTORY_DIR, f"{symbol}.parquet")
+    path = os.path.join(price_dir, f"{symbol}.parquet")
 
     if os.path.exists(path):
         existing = pd.read_parquet(path)
@@ -139,21 +128,19 @@ def save_parquet(symbol, new_df):
     )
     new_df.to_parquet(path, index=False)
 
-# Step 5. Upload to Supabase
-
 def upload_to_supabase(symbol):
-    path = os.path.join(HISTORY_DIR, f"{symbol}.parquet")
+    path = os.path.join(price_dir, f"{symbol}.parquet")
     with open(path, "rb") as f:
         client.storage.from_("pse-price").upload(
             f"{symbol}.parquet",
             f,
-            {"upsert": "true"}  # overwrite if exists
+            {"upsert": "true"}
         )
 
 # # # # # # # # # # # # # # # # # # # # # # # # # 
 
+print("Starting PSE Price Downloader...")
 companies = get_company_list()
-
 for i, company in enumerate(companies):
     symbol = company["symbol"]
     try:
@@ -161,11 +148,9 @@ for i, company in enumerate(companies):
         if df is not None and not df.empty:
             save_parquet(symbol, df)
             upload_to_supabase(symbol)
-            print(f"[{i+1}/{len(companies)}] {symbol} saved {len(df)} rows")
+            print(f"[{i+1}/{len(companies)}] {symbol}")
         else:
             print(f"[{i+1}/{len(companies)}] {symbol} no data")
     except Exception as e:
         print(f"[{i+1}/{len(companies)}] {symbol} ERROR: {e}")
-
-    time.sleep(RATE_LIMIT_SEC)
-
+    time.sleep(request_delay)
