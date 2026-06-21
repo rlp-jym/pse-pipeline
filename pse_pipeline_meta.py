@@ -8,9 +8,9 @@ import pandas as pd
 from bs4 import BeautifulSoup
 from typing import Dict, List
 
-supabase_url = os.environ["supabase_url"]
-supabase_key = os.environ["supabase_key"]
-client = supabase.create_client(supabase_url, supabase_key)
+SUPABASE_URL = os.environ["SUPABASE_URL"]
+SUPABASE_KEY = os.environ["SUPABASE_KEY"]
+client = supabase.create_client(SUPABASE_URL, SUPABASE_KEY)
 base_url = "https://edge.pse.com.ph"
 meta_dir = "Meta"  
 os.makedirs(meta_dir, exist_ok=True)
