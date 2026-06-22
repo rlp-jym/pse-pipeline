@@ -35,3 +35,13 @@ jobs:
                   -e SUPABASE_URL=$SUPABASE_URL \
                   -e SUPABASE_KEY=$SUPABASE_KEY \
                   pse-pipeline:v01 uv run python pse_pipeline_meta.py
+
+            - name: Run duckdb processing
+              env:
+                SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+                SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+              run: |
+                docker run --rm \
+                  -e SUPABASE_URL=$SUPABASE_URL \
+                  -e SUPABASE_KEY=$SUPABASE_KEY \
+                  pse-pipeline:v01 uv run python pse_pipeline_duckdb.py
