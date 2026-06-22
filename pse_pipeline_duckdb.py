@@ -2,20 +2,25 @@ import os
 import supabase
 import yfinance as yf
 import duckdb
+import time
 
 SUPABASE_URL = os.environ["SUPABASE_URL"]
 SUPABASE_KEY = os.environ["SUPABASE_KEY"]
-client = supabase.create_client(SUPABASE_URL, SUPABASE_KEY)
-s3_endpoint = 'mckyuuzvkuxzfkjoucyo.supabase.co/storage/v1/s3'
 SUPABASE_S3_KEY = os.environ["SUPABASE_S3_KEY"]
 SUPABASE_S3_SECRET = os.environ["SUPABASE_S3_SECRET"]
+
+client = supabase.create_client(SUPABASE_URL, SUPABASE_KEY)
+s3_endpoint = 'mckyuuzvkuxzfkjoucyo.supabase.co/storage/v1/s3'
 s3_region = 'ap-northeast-1'
 s3_url_style = 'path'
 
 
 # # # # # MERGE DATA # # # # # 
 
-get_price = duckdb.sql(f"""
+print('Processing...')
+start_time = time.time()
+
+merge_price = duckdb.sql(f"""
     INSTALL httpfs;
     LOAD httpfs;
     SET s3_endpoint='{s3_endpoint}';
@@ -27,7 +32,10 @@ get_price = duckdb.sql(f"""
     FROM read_parquet('s3://pse-price/*.parquet', union_by_name=True)
 """)
 
-get_meta = duckdb.sql(f"""
+merge_price_time = time.time()
+print(f'Merged price in {merge_price_time - start_time:.2f}s')
+
+merge_meta = duckdb.sql(f"""
     INSTALL httpfs;
     LOAD httpfs;
     SET s3_endpoint='{s3_endpoint}';
@@ -45,6 +53,9 @@ get_meta = duckdb.sql(f"""
     FROM read_parquet('s3://pse-meta/*.parquet', union_by_name=True)
 """)
 
+merge_meta_time = time.time()
+print(f'Merged meta in {merge_meta_time - merge_price_time:.2f}s')
+
 
 # # # # # CTE PRICE FACTORY # # # # # 
 
@@ -56,8 +67,8 @@ df_price = duckdb.sql("""
                 b."company_details.sector" AS Sector,
                 clean_industry AS Industry,
                 TRY_CAST((((close / LAG(close) OVER (PARTITION BY symbol ORDER BY date ASC)) - 1) * 100) AS DOUBLE) AS Chg
-            FROM get_price a
-            JOIN get_meta b ON a.symbol = b."company_info.symbol"
+            FROM merge_price a
+            JOIN merge_meta b ON a.symbol = b."company_info.symbol"
         )
         SELECT
             TRY_CAST(Date AS DATE) AS Date, 
@@ -203,6 +214,8 @@ with open('pse_clean_price.parquet', 'rb') as f:
         {"upsert": "true"}
     )
 
+process_price_time = time.time()
+print(f'\nProcessed price in {process_price_time - merge_meta_time:.2f}s')
 
 # # # # # CTE META FACTORY # # # # # 
 
@@ -215,7 +228,7 @@ df_meta = duckdb.sql(f"""
         WITH 
         pre_join AS (
             SELECT *
-            FROM get_meta a 
+            FROM merge_meta a 
             LEFT JOIN df_price_last_day b ON a."company_info.symbol" = b.Symbol
         ),
         pre_clean AS (
@@ -445,6 +458,9 @@ with open('pse_clean_meta.parquet', 'rb') as f:
         {"upsert": "true"}
     )
 
+process_meta_time = time.time()
+print(f'Processed meta in {process_meta_time - process_price_time:.2f}s')
+
 
 # # # # # CTE AGG FACTORY # # # # # 
 
@@ -570,3 +586,7 @@ with open('pse_clean_agg.parquet', 'rb') as f:
         f,
         {"upsert": "true"}
     )
+
+process_aggs_time = time.time()
+print(f'Processed aggs in {process_aggs_time - process_meta_time:.2f}s')
+print(f'\nFinished in {time.time() - start_time:.2f}s')

@@ -5,4 +5,4 @@ WORKDIR /app
 COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen
 COPY pse_pipeline_price.py pse_pipeline_meta.py pse_pipeline_duckdb.py .
-CMD ["uv", "run", "python", "pse_pipeline_duckdb.py"]
+CMD ["uv", "run", "python", "pse_pipeline_price.py"]
