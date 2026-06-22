@@ -7,8 +7,8 @@ SUPABASE_URL = os.environ["SUPABASE_URL"]
 SUPABASE_KEY = os.environ["SUPABASE_KEY"]
 client = supabase.create_client(SUPABASE_URL, SUPABASE_KEY)
 s3_endpoint = 'mckyuuzvkuxzfkjoucyo.supabase.co/storage/v1/s3'
-S3_KEY = os.environ["SUPABASE_S3_ACCESS_KEY_ID"]
-S3_SECRET = os.environ["SUPABASE_S3_SECRET_ACCESS_KEY"]
+SUPABASE_S3_KEY = os.environ["SUPABASE_S3_KEY"]
+SUPABASE_S3_SECRET = os.environ["SUPABASE_S3_SECRET"]
 s3_region = 'ap-northeast-1'
 s3_url_style = 'path'
 
@@ -19,8 +19,8 @@ get_price = duckdb.sql(f"""
     INSTALL httpfs;
     LOAD httpfs;
     SET s3_endpoint='{s3_endpoint}';
-    SET s3_access_key_id='{S3_KEY}';
-    SET s3_secret_access_key='{S3_SECRET}';
+    SET s3_access_key_id='{SUPABASE_S3_KEY}';
+    SET s3_secret_access_key='{SUPABASE_S3_SECRET}';
     SET s3_region='{s3_region}';
     SET s3_url_style='{s3_url_style}';
     SELECT *
@@ -31,8 +31,8 @@ get_meta = duckdb.sql(f"""
     INSTALL httpfs;
     LOAD httpfs;
     SET s3_endpoint='{s3_endpoint}';
-    SET s3_access_key_id='{S3_KEY}';
-    SET s3_secret_access_key='{S3_SECRET}';
+    SET s3_access_key_id='{SUPABASE_S3_KEY}';
+    SET s3_secret_access_key='{SUPABASE_S3_SECRET}';
     SET s3_region='{s3_region}';
     SET s3_url_style='{s3_url_style}';
     SELECT *,
