@@ -57,7 +57,7 @@ df_price = duckdb.sql("""
                 clean_industry AS Industry,
                 TRY_CAST((((close / LAG(close) OVER (PARTITION BY symbol ORDER BY date ASC)) - 1) * 100) AS DOUBLE) AS Chg
             FROM get_price a
-            JOIN meta b ON a.symbol = b."company_info.symbol"
+            JOIN get_meta b ON a.symbol = b."company_info.symbol"
         )
         SELECT
             TRY_CAST(Date AS DATE) AS Date, 
