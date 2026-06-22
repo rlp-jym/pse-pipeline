@@ -239,7 +239,6 @@ df_meta = duckdb.sql(f"""
             ROUND("Shares Out" * "Float Pct" / 100, 0) AS "Shares Float",
 
             TRY_CAST(strptime("financial_reports.annual_fiscal_year_ended", '%b %d, %Y') AS DATE) AS "Fiscal Year End",
-
 			----- ANNUAL FX CONVERT
             CAST(CASE 
                 WHEN LOWER("financial_reports.annual_currency") ILIKE '%c$%'	 THEN {cadphp}
@@ -252,7 +251,6 @@ df_meta = duckdb.sql(f"""
                 WHEN LOWER("financial_reports.annual_currency") ILIKE '%thou%' THEN 1000
                 WHEN LOWER("financial_reports.annual_currency") ILIKE '%000%'  THEN 1000
                     ELSE 1 END AS DOUBLE) AS multiple_year,
-
 			----- ANNUAL FINANCIAL STATEMENTS
             TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.annual_balance'), '[\\"\\,\\[\\]]', '', 'g'), ' ', 1) AS DOUBLE),
             TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.annual_balance'), '[\\"\\,\\[\\]]', '', 'g'), ' ', 2) AS DOUBLE),
@@ -260,7 +258,6 @@ df_meta = duckdb.sql(f"""
             TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.annual_income'),  '[\\"\\,\\[\\]]', '', 'g'), ' ', 2) AS DOUBLE),
 
             TRY_CAST(strptime("financial_reports.quarterly_period_ended", '%b %d, %Y') AS DATE) AS "Fiscal Quarter End",
-
 			----- QUARTERLY FX CONVERT
             CAST(CASE 
                 WHEN LOWER("financial_reports.quarterly_currency") ILIKE '%c$%'	    THEN {cadphp}
@@ -273,7 +270,6 @@ df_meta = duckdb.sql(f"""
                 WHEN LOWER("financial_reports.quarterly_currency") ILIKE '%thou%' THEN 1000
                 WHEN LOWER("financial_reports.quarterly_currency") ILIKE '%000%'  THEN 1000
                     ELSE 1 END AS DOUBLE) AS multiple_quarter,
-
 			----- QUARTERLY FINANCIAL STATEMENTS
             TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.quarterly_balance'), '[\\"\\,\\[\\]]', '', 'g'), ' ', 1) AS DOUBLE),
             TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.quarterly_balance'), '[\\"\\,\\[\\]]', '', 'g'), ' ', 2) AS DOUBLE),
@@ -281,7 +277,6 @@ df_meta = duckdb.sql(f"""
             TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.quarterly_income'),  '[\\"\\,\\[\\]]', '', 'g'), ' ', 2) AS DOUBLE),        
             TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.quarterly_income'),  '[\\"\\,\\[\\]]', '', 'g'), ' ', 3) AS DOUBLE),
             TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.quarterly_income'),  '[\\"\\,\\[\\]]', '', 'g'), ' ', 4) AS DOUBLE),
-
 			----- LAST PRICE AND INDICATOR VALUES
 			Open, High, Low, Close, Chg, Gain, Loss, Value, Volume, MA20, RSI20, MA60, RSI60, MA240, RSI240, 
 			"Month High", "Month Low", "Month Chg High", "Month Chg Low", "Month Val High", "Month Val Low",
@@ -310,7 +305,6 @@ df_meta = duckdb.sql(f"""
             Symbol, Name, Description, Sector, Industry, "Market Cap", "Shares Out", "Shares Float", "Float Pct",
 
 			"Fiscal Year End",
-
             ----- BALANCE SHEET, CURRENT YEAR
             ROUND(CAST(multiple_year * fx_year * "financial_reports.annual_balance_sheet.Current Assets"              AS BIGINT), 0) AS "CY Current Assets",
             ROUND(CAST(multiple_year * fx_year * "financial_reports.annual_balance_sheet.Total Assets"                AS BIGINT), 0) AS "CY Total Assets",
@@ -319,7 +313,6 @@ df_meta = duckdb.sql(f"""
             ROUND(CAST(multiple_year * fx_year * "financial_reports.annual_balance_sheet.Retained Earnings/(Deficit)" AS BIGINT), 0) AS "CY Retained Earnings",
             ROUND(CAST(multiple_year * fx_year * "financial_reports.annual_balance_sheet.Stockholders' Equity"        AS BIGINT), 0) AS "CY Equity",
             ROUND(fx_year * "financial_reports.annual_balance_sheet.Book Value Per Share"                                       , 2) AS "CY BVPS",
-
 			----- BALANCE SHEET, PREVIOUS YEAR
             ROUND(CAST(multiple_year * fx_year * "financial_reports.annual_balance_sheet.Current Assets_1"              AS BIGINT), 0) AS "PY Current Assets",
             ROUND(CAST(multiple_year * fx_year * "financial_reports.annual_balance_sheet.Total Assets_1"                AS BIGINT), 0) AS "PY Total Assets",
@@ -328,19 +321,16 @@ df_meta = duckdb.sql(f"""
             ROUND(CAST(multiple_year * fx_year * "financial_reports.annual_balance_sheet.Retained Earnings/(Deficit)_1" AS BIGINT), 0) AS "PY Retained Earnings",
             ROUND(CAST(multiple_year * fx_year * "financial_reports.annual_balance_sheet.Stockholders' Equity_1"        AS BIGINT), 0) AS "PY Equity",
             ROUND(fx_year * "financial_reports.annual_balance_sheet.Book Value Per Share_1"                                       , 2) AS "PY BVPS",
-
 			----- INCOME STATEMENT, CURRENT YEAR
             ROUND(CAST(multiple_year * fx_year * "financial_reports.annual_income_statement.Gross Revenue"               AS BIGINT), 0) AS "CY Revenue",
             ROUND(CAST(multiple_year * fx_year * "financial_reports.annual_income_statement.Net Income/(Loss) After Tax" AS BIGINT), 0) AS "CY Income",
             ROUND(fx_year * "financial_reports.annual_income_statement.Earnings/(Loss) Per Share (Basic)"                          , 2) AS "CY EPS",
-
 			----- INCOME STATEMENT, PREVIOUS YEAR
             ROUND(CAST(multiple_year * fx_year * "financial_reports.annual_income_statement.Gross Revenue_1"               AS BIGINT), 0) AS "PY Revenue",
             ROUND(CAST(multiple_year * fx_year * "financial_reports.annual_income_statement.Net Income/(Loss) After Tax_1" AS BIGINT), 0) AS "PY Income",
             ROUND(fx_year * "financial_reports.annual_income_statement.Earnings/(Loss) Per Share (Basic)_1"                          , 2) AS "PY EPS",
 
 			"Fiscal Quarter End",
-
             ----- BALANCE SHEET, CURRENT QUARTER
             ROUND(CAST(multiple_quarter * fx_quarter * "financial_reports.quarterly_balance_sheet.Current Assets" 			   AS BIGINT), 0) AS "CQ Current Assets",
             ROUND(CAST(multiple_quarter * fx_quarter * "financial_reports.quarterly_balance_sheet.Total Assets" 			   AS BIGINT), 0) AS "CQ Total Assets",
@@ -349,7 +339,6 @@ df_meta = duckdb.sql(f"""
             ROUND(CAST(multiple_quarter * fx_quarter * "financial_reports.quarterly_balance_sheet.Retained Earnings/(Deficit)" AS BIGINT), 0) AS "CQ Retained Earnings",
             ROUND(CAST(multiple_quarter * fx_quarter * "financial_reports.quarterly_balance_sheet.Stockholders' Equity" 	   AS BIGINT), 0) AS "CQ Equity",
             ROUND(fx_quarter * "financial_reports.quarterly_balance_sheet.Book Value Per Share" 							             , 2) AS "CQ BVPS",
-
 			----- BALANCE SHEET, PREVIOUS QUARTER
             ROUND(CAST(multiple_quarter * fx_quarter * "financial_reports.quarterly_balance_sheet.Current Assets_1" 		     AS BIGINT), 0) AS "PQ Current Assets",
             ROUND(CAST(multiple_quarter * fx_quarter * "financial_reports.quarterly_balance_sheet.Total Assets_1" 			     AS BIGINT), 0) AS "PQ Total Assets",
@@ -358,27 +347,22 @@ df_meta = duckdb.sql(f"""
             ROUND(CAST(multiple_quarter * fx_quarter * "financial_reports.quarterly_balance_sheet.Retained Earnings/(Deficit)_1" AS BIGINT), 0) AS "PQ Retained Earnings",
             ROUND(CAST(multiple_quarter * fx_quarter * "financial_reports.quarterly_balance_sheet.Stockholders' Equity_1" 	     AS BIGINT), 0) AS "PQ Equity",
             ROUND(fx_quarter * "financial_reports.quarterly_balance_sheet.Book Value Per Share_1" 										   , 2) AS "PQ BVPS",
-
 			----- INCOME STATEMENT, CURRENT QUARTER
             ROUND(CAST(multiple_quarter * fx_quarter * "financial_reports.quarterly_income_statement.Gross Revenue" 			  AS BIGINT), 0) AS "CQ Revenue",
             ROUND(CAST(multiple_quarter * fx_quarter * "financial_reports.quarterly_income_statement.Net Income/(Loss) After Tax" AS BIGINT), 0) AS "CQ Income",
             ROUND(fx_quarter * "financial_reports.quarterly_income_statement.Earnings/(Loss) Per Share (Basic)" 							, 2) AS "CQ EPS",
-
 			----- INCOME STATEMENT, PREVIOUS QUARTER
             ROUND(CAST(multiple_quarter * fx_quarter * "financial_reports.quarterly_income_statement.Gross Revenue_1" 		  	    AS BIGINT), 0) AS "PQ Revenue",
             ROUND(CAST(multiple_quarter * fx_quarter * "financial_reports.quarterly_income_statement.Net Income/(Loss) After Tax_1" AS BIGINT), 0) AS "PQ Income",
             ROUND(fx_quarter * "financial_reports.quarterly_income_statement.Earnings/(Loss) Per Share (Basic)_1" 						      , 2) AS "PQ EPS",
-
 			----- INCOME STATEMENT, CURRENT YEAR TO DATE
             ROUND(CAST(multiple_quarter * fx_quarter * "financial_reports.quarterly_income_statement.Gross Revenue_2" 			    AS BIGINT), 0) AS "CY YTD Revenue",
             ROUND(CAST(multiple_quarter * fx_quarter * "financial_reports.quarterly_income_statement.Net Income/(Loss) After Tax_2" AS BIGINT), 0) AS "CY YTD Income",
             ROUND(fx_quarter * "financial_reports.quarterly_income_statement.Earnings/(Loss) Per Share (Basic)_2" 							  , 2) AS "CY YTD EPS",
-
 			----- INCOME STATEMENT, PREVIOUS YEAR TO DATE
             ROUND(CAST(multiple_quarter * fx_quarter * "financial_reports.quarterly_income_statement.Gross Revenue_3" 			    AS BIGINT), 0) AS "PY YTD Revenue",
             ROUND(CAST(multiple_quarter * fx_quarter * "financial_reports.quarterly_income_statement.Net Income/(Loss) After Tax_3" AS BIGINT), 0) AS "PY YTD Income",
             ROUND(fx_quarter * "financial_reports.quarterly_income_statement.Earnings/(Loss) Per Share (Basic)_3" 							  , 2) AS "PY YTD EPS",
-
 			----- LAST PRICE AND INDICATOR VALUES
 			Open, High, Low, Close, Chg, Gain, Loss, Value, Volume, MA20, RSI20, MA60, RSI60, MA240, RSI240, 
 			"Month High", "Month Low", "Month Chg High", "Month Chg Low", "Month Val High", "Month Val Low",
@@ -412,7 +396,6 @@ df_meta = duckdb.sql(f"""
             FROM df_cleaner
         )
         SELECT *,
-
             ----- GROWTH AND PROFITABILITY
             ROUND((("TTM Revenue" - "CY Revenue") / ABS(NULLIF("CY Revenue", 0))) * 100, 2) AS "Revenue Growth",
             ROUND((("TTM Income"  - "CY Income")  / ABS(NULLIF("CY Income" , 0))) * 100, 2) AS "Income Growth",
@@ -420,12 +403,10 @@ df_meta = duckdb.sql(f"""
             ROUND("TTM Income" / NULLIF("TTM Revenue"                 , 0) * 100, 2) AS "Income Margin",
             ROUND("TTM Income" / NULLIF("CQ Total Assets", 0) * 100, 2) AS "Return On Assets",
             ROUND("TTM Income" / NULLIF("CQ Equity"      , 0) * 100, 2) AS "Return On Equity",
-
 			----- LIQUIDITY AND SOLVENCY
 			ROUND("CQ Current Assets"    / NULLIF("CQ Current Liabilities", 0), 2) AS "Current Ratio",
 			ROUND("CQ Total Liabilities" / NULLIF("CQ Total Assets"       , 0), 2) AS "Debt Ratio",     ----------> proxy: total debt not available
 			ROUND("CQ Total Liabilities" / NULLIF("CQ Equity"             , 0), 2) AS "D/E Ratio",      ----------> proxy: total debt not available
-
 			----- VALUATION
             ROUND("Market Cap"  / NULLIF("TTM Revenue", 0), 2) AS "P/S",
             ROUND("Market Cap"  / NULLIF("TTM Income" , 0), 2) AS "P/E",
@@ -470,25 +451,52 @@ with open('pse_clean_meta.parquet', 'rb') as f:
 df_agg = duckdb.sql("""
     WITH
     pre_agg AS (
-        SELECT Sector, Industry, COUNT(*) AS Count,
-            ROUND(CAST(SUM("Value")                AS BIGINT), 0) AS Turnover,
-            ROUND(CAST(SUM("Market Cap")           AS BIGINT), 0) AS "Market Cap",
-            ROUND(CAST(SUM("CQ Total Assets")      AS BIGINT), 0) AS Assets,
-            ROUND(CAST(SUM("CQ Total Liabilities") AS BIGINT), 0) AS Liabilities,
-            ROUND(CAST(SUM("CQ Equity")            AS BIGINT), 0) AS Equity,
-            ROUND(CAST(SUM("TTM Revenue")          AS BIGINT), 0) AS Revenue,
-            ROUND(CAST(SUM("TTM Income")           AS BIGINT), 0) AS Income,
-            ROUND(CAST(AVG("RSI20")                AS DOUBLE), 0) AS RSI20,
-            ROUND(CAST(AVG("RSI60")                AS DOUBLE), 0) AS RSI60,
-            ROUND(CAST(AVG("RSI240")               AS DOUBLE), 0) AS RSI240,
-            ROUND((COUNT(*) FILTER (WHERE Close > MA20) / COUNT(*) * 100), 2)  AS "MA20 Breadth",
-            ROUND((COUNT(*) FILTER (WHERE Close > MA60) / COUNT(*) * 100), 2)  AS "MA60 Breadth",
-            ROUND((COUNT(*) FILTER (WHERE Close > MA240) / COUNT(*) * 100), 2) AS "MA240 Breadth",
-            SUM("CY Revenue") AS "CY Revenue",
-            SUM("CY Income")  AS "CY Income"
-        FROM df_meta
-        WHERE Sector != 'ETF'
-        GROUP BY Sector, Industry
+        WITH
+        market_agg AS (
+            SELECT 'PSE' AS Sector, 'PSE' AS Industry, 
+                COUNT(*) AS Count,
+                ROUND(CAST(SUM("Value")                AS BIGINT), 0) AS Turnover,
+                ROUND(CAST(SUM("Market Cap")           AS BIGINT), 0) AS "Market Cap",
+                ROUND(CAST(SUM("CQ Total Assets")      AS BIGINT), 0) AS Assets,
+                ROUND(CAST(SUM("CQ Total Liabilities") AS BIGINT), 0) AS Liabilities,
+                ROUND(CAST(SUM("CQ Equity")            AS BIGINT), 0) AS Equity,
+                ROUND(CAST(SUM("TTM Revenue")          AS BIGINT), 0) AS Revenue,
+                ROUND(CAST(SUM("TTM Income")           AS BIGINT), 0) AS Income,
+                ROUND(CAST(AVG("RSI20")                AS DOUBLE), 0) AS RSI20,
+                ROUND(CAST(AVG("RSI60")                AS DOUBLE), 0) AS RSI60,
+                ROUND(CAST(AVG("RSI240")               AS DOUBLE), 0) AS RSI240,
+                ROUND((COUNT(*) FILTER (WHERE Close > MA20) / COUNT(*) * 100), 2)  AS "MA20 Breadth",
+                ROUND((COUNT(*) FILTER (WHERE Close > MA60) / COUNT(*) * 100), 2)  AS "MA60 Breadth",
+                ROUND((COUNT(*) FILTER (WHERE Close > MA240) / COUNT(*) * 100), 2) AS "MA240 Breadth",
+                SUM("CY Revenue") AS "CY Revenue",
+                SUM("CY Income")  AS "CY Income"
+            FROM df_meta
+            WHERE Sector != 'ETF'
+        ),
+        sector_industry_agg AS (
+            SELECT Sector, Industry, COUNT(*) AS Count,
+                ROUND(CAST(SUM("Value")                AS BIGINT), 0) AS Turnover,
+                ROUND(CAST(SUM("Market Cap")           AS BIGINT), 0) AS "Market Cap",
+                ROUND(CAST(SUM("CQ Total Assets")      AS BIGINT), 0) AS Assets,
+                ROUND(CAST(SUM("CQ Total Liabilities") AS BIGINT), 0) AS Liabilities,
+                ROUND(CAST(SUM("CQ Equity")            AS BIGINT), 0) AS Equity,
+                ROUND(CAST(SUM("TTM Revenue")          AS BIGINT), 0) AS Revenue,
+                ROUND(CAST(SUM("TTM Income")           AS BIGINT), 0) AS Income,
+                ROUND(CAST(AVG("RSI20")                AS DOUBLE), 0) AS RSI20,
+                ROUND(CAST(AVG("RSI60")                AS DOUBLE), 0) AS RSI60,
+                ROUND(CAST(AVG("RSI240")               AS DOUBLE), 0) AS RSI240,
+                ROUND((COUNT(*) FILTER (WHERE Close > MA20) / COUNT(*) * 100), 2)  AS "MA20 Breadth",
+                ROUND((COUNT(*) FILTER (WHERE Close > MA60) / COUNT(*) * 100), 2)  AS "MA60 Breadth",
+                ROUND((COUNT(*) FILTER (WHERE Close > MA240) / COUNT(*) * 100), 2) AS "MA240 Breadth",
+                SUM("CY Revenue") AS "CY Revenue",
+                SUM("CY Income")  AS "CY Income"
+            FROM df_meta
+            WHERE Sector != 'ETF'
+            GROUP BY Sector, Industry
+        )
+        SELECT * FROM market_agg
+        UNION ALL
+        SELECT * FROM sector_industry_agg
     ),
     aggs AS (
         WITH
@@ -519,12 +527,10 @@ df_agg = duckdb.sql("""
                 DENSE_RANK() OVER (ORDER BY "Income Margin"    DESC) AS "Margin Rank",
                 DENSE_RANK() OVER (ORDER BY "Return on Assets" DESC) AS "ROA Rank",
                 DENSE_RANK() OVER (ORDER BY "Return on Equity" DESC) AS "ROE Rank",
-
     			----- VALUATION RANKINGS, LOWER IS BETTER
                 DENSE_RANK() OVER (ORDER BY "P/S"  ASC) AS "PS Rank",
                 DENSE_RANK() OVER (ORDER BY "P/E"  ASC) AS "PE Rank",
                 DENSE_RANK() OVER (ORDER BY "P/BV" ASC) AS "PBV Rank",  
-
                 ----- BREADTH RANKINGS, HIGHER IS BETTER
                 DENSE_RANK() OVER (ORDER BY "MA20 Breadth"  DESC) AS "ST Breadth Rank",
                 DENSE_RANK() OVER (ORDER BY "MA60 Breadth"  DESC) AS "MT Breadth Rank",
