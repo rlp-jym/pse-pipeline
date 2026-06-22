@@ -46,6 +46,6 @@ jobs:
                 docker run --rm \
                   -e SUPABASE_URL=$SUPABASE_URL \
                   -e SUPABASE_KEY=$SUPABASE_KEY \
-                  -e S3_KEY=$SUPABASE_S3_ACCESS_KEY_ID \
-                  -e S3_SECRET=$SUPABASE_S3_SECRET_ACCESS_KEY \
+                  -e S3_KEY=$S3_KEY \
+                  -e S3_SECRET=$S3_SECRET \
                   pse-pipeline:v01 uv run python pse_pipeline_duckdb.py
