@@ -1,6 +1,8 @@
 # Generated files
-.parquet
-.pbix
+*.csv
+*.parquet
+*.pbix
+temp.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -81,7 +83,7 @@ target/
 
 # Jupyter Notebook
 .ipynb_checkpoints
-.ipynb
+*.ipynb
 
 # IPython
 profile_default/
