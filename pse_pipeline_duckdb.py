@@ -3,15 +3,12 @@ import supabase
 import yfinance as yf
 import duckdb
 import time
-from sqlalchemy import create_engine
 
 SUPABASE_URL = os.environ["SUPABASE_URL"]
 SUPABASE_KEY = os.environ["SUPABASE_KEY"]
 SUPABASE_S3_KEY = os.environ["SUPABASE_S3_KEY"]
 SUPABASE_S3_SECRET = os.environ["SUPABASE_S3_SECRET"]
-SUPABASE_PW = os.environ["SUPABASE_PW"]
 
-engine = create_engine(f"postgresql://postgres.mckyuuzvkuxzfkjoucyo:{SUPABASE_PW}@aws-1-ap-northeast-1.pooler.supabase.com:5432/postgres")
 client = supabase.create_client(SUPABASE_URL, SUPABASE_KEY)
 s3_endpoint = 'mckyuuzvkuxzfkjoucyo.supabase.co/storage/v1/s3'
 s3_region = 'ap-northeast-1'
@@ -210,7 +207,6 @@ df_price_curr_year = duckdb.sql("""
 df_price.to_parquet('pse_clean_price_full.parquet', index=False)      # store locally (above supabase limit)
 df_price_curr_year.to_parquet('pse_clean_price.parquet', index=False)
 df_price_curr_year.to_csv('pse_clean_price.csv', index=False)
-df_price_curr_year.to_sql('price', engine, if_exists='replace', index=False)
 
 for filename in ['pse_clean_price.parquet', 'pse_clean_price.csv']:
     with open(filename, 'rb') as f:
@@ -457,7 +453,6 @@ df_meta = duckdb.sql(f"""
 
 df_meta.to_parquet('pse_clean_meta.parquet', index=False)
 df_meta.to_csv('pse_clean_meta.csv', index=False)
-df_meta.to_sql('meta', engine, if_exists='replace', index=False)
 
 for filename in ['pse_clean_meta.parquet', 'pse_clean_meta.csv']:
     with open(filename, 'rb') as f:
@@ -589,7 +584,6 @@ df_agg = duckdb.sql("""
 
 df_agg.to_parquet('pse_clean_agg.parquet', index=False)
 df_agg.to_csv('pse_clean_agg.csv', index=False)
-df_agg.to_sql('agg', engine, if_exists='replace', index=False)
 
 for filename in ['pse_clean_agg.parquet', 'pse_clean_agg.csv']:
     with open(filename, 'rb') as f:

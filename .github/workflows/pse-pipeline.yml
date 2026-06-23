@@ -42,12 +42,10 @@ jobs:
                 SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
                 SUPABASE_S3_KEY: ${{ secrets.SUPABASE_S3_KEY }}
                 SUPABASE_S3_SECRET: ${{ secrets.SUPABASE_S3_SECRET }}
-                SUPABASE_PW: ${{ secrets.SUPABASE_PW }}
               run: |
                 docker run --rm \
                   -e SUPABASE_URL=$SUPABASE_URL \
                   -e SUPABASE_KEY=$SUPABASE_KEY \
                   -e SUPABASE_S3_KEY=$SUPABASE_S3_KEY \
                   -e SUPABASE_S3_SECRET=$SUPABASE_S3_SECRET \
-                  -e SUPABASE_PW=$SUPABASE_PW \
                   pse-pipeline:v01 uv run python pse_pipeline_duckdb.py
