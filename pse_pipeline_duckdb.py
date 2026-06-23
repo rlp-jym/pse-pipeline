@@ -208,14 +208,17 @@ df_price_curr_year = duckdb.sql("""
 """).fetchdf() # upload to supabase
 
 df_price.to_parquet('pse_clean_price_full.parquet', index=False)      # store locally (above supabase limit)
-df_price_curr_year.to_parquet('pse_clean_price.parquet', index=False) # send to supabase
+df_price_curr_year.to_parquet('pse_clean_price.parquet', index=False)
+df_price_curr_year.to_csv('pse_clean_price.csv', index=False)
+df_price_curr_year.to_sql('price', engine, if_exists='replace', index=False)
 
-with open('pse_clean_price.parquet', 'rb') as f:
-    client.storage.from_("pse-clean").upload(
-        'pse_clean_price.parquet',
-        f,
-        {"upsert": "true"}
-    )
+for filename in ['pse_clean_price.parquet', 'pse_clean_price.csv']:
+    with open(filename, 'rb') as f:
+        client.storage.from_("pse-clean").upload(
+            filename,
+            f,
+            {"upsert": "true"}
+        )
 
 process_price_time = time.time()
 print(f'\nProcessed price in {process_price_time - merge_meta_time:.2f}s')
@@ -453,13 +456,16 @@ df_meta = duckdb.sql(f"""
 """).fetchdf()
 
 df_meta.to_parquet('pse_clean_meta.parquet', index=False)
+df_meta.to_csv('pse_clean_meta.csv', index=False)
+df_meta.to_sql('meta', engine, if_exists='replace', index=False)
 
-with open('pse_clean_meta.parquet', 'rb') as f:
-    client.storage.from_("pse-clean").upload(
-        'pse_clean_meta.parquet',
-        f,
-        {"upsert": "true"}
-    )
+for filename in ['pse_clean_meta.parquet', 'pse_clean_meta.csv']:
+    with open(filename, 'rb') as f:
+        client.storage.from_("pse-clean").upload(
+            filename,
+            f,
+            {"upsert": "true"}
+        )
 
 process_meta_time = time.time()
 print(f'Processed meta in {process_meta_time - process_price_time:.2f}s')
@@ -582,14 +588,17 @@ df_agg = duckdb.sql("""
 """).fetchdf()
 
 df_agg.to_parquet('pse_clean_agg.parquet', index=False)
+df_agg.to_csv('pse_clean_agg.csv', index=False)
+df_agg.to_sql('agg', engine, if_exists='replace', index=False)
 
-with open('pse_clean_agg.parquet', 'rb') as f:
-    client.storage.from_("pse-clean").upload(
-        'pse_clean_agg.parquet',
-        f,
-        {"upsert": "true"}
-    )
-
+for filename in ['pse_clean_agg.parquet', 'pse_clean_agg.csv']:
+    with open(filename, 'rb') as f:
+        client.storage.from_("pse-clean").upload(
+            filename,
+            f,
+            {"upsert": "true"}
+        )
+       
 process_aggs_time = time.time()
 print(f'Processed aggs in {process_aggs_time - process_meta_time:.2f}s')
 print(f'\nFinished in {time.time() - start_time:.2f}s')
