@@ -17,7 +17,7 @@ s3_url_style = 'path'
 
 # # # # # MERGE DATA # # # # # 
 
-print('Processing...')
+print('\nStarting CTE Factory...')
 start_time = time.time()
 
 merge_price = duckdb.sql(f"""

@@ -321,7 +321,7 @@ def upload_to_supabase(symbol):
 
 # # # # # # # # # # # # # # # # # # # # # # # # # 
 
-print("Starting PSE Meta Downloader...")
+print("\nStarting PSE Meta Downloader...")
 companies = get_company_list()
 if not companies:
     print("No companies found. Exiting.")

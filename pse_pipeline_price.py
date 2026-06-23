@@ -139,7 +139,7 @@ def upload_to_supabase(symbol):
 
 # # # # # # # # # # # # # # # # # # # # # # # # # 
 
-print("Starting PSE Price Downloader...")
+print("\nStarting PSE Price Downloader...")
 companies = get_company_list()
 for i, company in enumerate(companies):
     symbol = company["symbol"]
