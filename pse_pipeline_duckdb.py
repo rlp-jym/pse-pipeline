@@ -3,12 +3,15 @@ import supabase
 import yfinance as yf
 import duckdb
 import time
+from sqlalchemy import create_engine
 
 SUPABASE_URL = os.environ["SUPABASE_URL"]
 SUPABASE_KEY = os.environ["SUPABASE_KEY"]
 SUPABASE_S3_KEY = os.environ["SUPABASE_S3_KEY"]
 SUPABASE_S3_SECRET = os.environ["SUPABASE_S3_SECRET"]
+SUPABASE_PW = os.environ["SUPABASE_PW"]
 
+engine = create_engine(f"postgresql://postgres.mckyuuzvkuxzfkjoucyo:{SUPABASE_PW}@aws-1-ap-northeast-1.pooler.supabase.com:5432/postgres")
 client = supabase.create_client(SUPABASE_URL, SUPABASE_KEY)
 s3_endpoint = 'mckyuuzvkuxzfkjoucyo.supabase.co/storage/v1/s3'
 s3_region = 'ap-northeast-1'
