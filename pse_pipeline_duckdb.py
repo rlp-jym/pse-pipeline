@@ -473,7 +473,7 @@ df_agg = duckdb.sql("""
     pre_agg AS (
         WITH
         market_agg AS (
-            SELECT 'PSE' AS Sector, 'PSE' AS Industry, 
+            SELECT 'Total Market' AS Sector, 'Total Market' AS Industry, 
                 COUNT(*) AS Count,
                 ROUND(CAST(SUM("Value")                AS BIGINT), 0) AS Turnover,
                 ROUND(CAST(SUM("Market Cap")           AS BIGINT), 0) AS "Market Cap",
