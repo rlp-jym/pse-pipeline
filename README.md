@@ -26,5 +26,7 @@ Output
 <img width="1912" height="914" alt="github actions end to end" src=".docs/05c output agg df.png" />
 
 ## Dashboard
-<img width="1912" height="914" alt="github actions end to end" src=".docs/06a sample dashboard.png" />
-<img width="1912" height="914" alt="github actions end to end" src=".docs/06b sample dashboard.png" />
+<img width="1912" height="914" alt="github actions end to end" src=".docs/06a schema relations.png" />
+<img width="1912" height="914" alt="github actions end to end" src=".docs/06b overview.png" />
+<img width="1912" height="914" alt="github actions end to end" src=".docs/06c matrix.png" />
+<img width="1912" height="914" alt="github actions end to end" src=".docs/06d trend.png" />
