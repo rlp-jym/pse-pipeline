@@ -432,14 +432,14 @@ df_meta = duckdb.sql(f"""
     )
     SELECT *,
         CASE
-            WHEN High == "All Time High" THEN 'ATHigh'
-            WHEN High == "Year High"     THEN 'YHigh'
-            WHEN High == "Quarter High"  THEN 'QHigh'
+            WHEN High == "All Time High" THEN 'All Time High'
+            WHEN High == "Year High"     THEN 'Year High'
+            WHEN High == "Quarter High"  THEN 'Quarter High'
                 ELSE '' END AS "Breakout Alert",
         CASE
-            WHEN Low == "All Time Low" THEN 'ATLow'
-            WHEN Low == "Year Low"     THEN 'YLow'
-            WHEN Low == "Quarter Low"  THEN 'QLow'
+            WHEN Low == "All Time Low" THEN 'All Time Low'
+            WHEN Low == "Year Low"     THEN 'Year Low'
+            WHEN Low == "Quarter Low"  THEN 'Quarter Low'
                 ELSE '' END AS "Breakdown Alert",
         CASE
             WHEN RSI20 < 10 THEN 'Panic'
@@ -577,9 +577,9 @@ df_agg = duckdb.sql("""
     SELECT *, 
         ROUND(("Profitability Rank" + 
         "Valuation Rank" + 
-        "Breadth Rank") / 3, 2) AS "Overall Score"
+        "Breadth Rank") / 3, 2) AS "Overall Rank"
     FROM ranks
-    ORDER BY "Overall Score" ASC
+    ORDER BY "Overall Rank" ASC
 """).fetchdf()
 
 df_agg.to_parquet('pse_clean_agg.parquet', index=False)
