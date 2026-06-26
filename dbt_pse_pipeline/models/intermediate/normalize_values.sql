@@ -1,8 +1,10 @@
 WITH fx AS (
+
     SELECT
         MAX(CASE WHEN currency = 'usdphp' THEN rate END) AS usdphp,
         MAX(CASE WHEN currency = 'cadphp' THEN rate END) AS cadphp
     FROM {{ ref('fx_rates') }}
+	
 )
 
 SELECT 
@@ -62,23 +64,19 @@ SELECT
 	
 	----- LAST PRICE AND INDICATOR VALUES
 	Open, High, Low, Close, Chg, Gain, Loss, Value, Volume, MA20, RSI20, MA60, RSI60, MA240, RSI240, 
-	"Month High", "Month Low", "Month Chg High", "Month Chg Low", "Month Val High", "Month Val Low",
-	"Quarter High", "Quarter Low", "Quarter Chg High", "Quarter Chg Low", "Quarter Val High", "Quarter Val Low",
-	"Year High", "Year Low", "Year Chg High", "Year Chg Low", "Year Val High", "Year Val Low",
-	"Market RSI20", "Market RSI60", "Market RSI240", 
-	"Sector RSI20", "Sector RSI60", "Sector RSI240", 
+	"Month High",    "Month Low",    "Month Chg High",    "Month Chg Low",    "Month Val High",    "Month Val Low",
+	"Quarter High",  "Quarter Low",  "Quarter Chg High",  "Quarter Chg Low",  "Quarter Val High",  "Quarter Val Low",
+	"Year High",     "Year Low",     "Year Chg High",     "Year Chg Low",     "Year Val High",     "Year Val Low",
+	"All Time High", "All Time Low", "All Time Chg High", "All Time Chg Low", "All Time Val High", "All Time Val Low", 
+	"Market RSI20",   "Market RSI60",   "Market RSI240", 
+	"Sector RSI20",   "Sector RSI60",   "Sector RSI240", 
 	"Industry RSI20", "Industry RSI60", "Industry RSI240", 
-	"Relative Month High", "Relative Month Low",
-	"Relative Quarter High", "Relative Quarter Low",
-	"Relative Year High", "Relative Year Low", 
+	"Relative Month High",    "Relative Month Low",
+	"Relative Quarter High",  "Relative Quarter Low",
+	"Relative Year High",     "Relative Year Low", 
 	"Relative All Time High", "Relative All Time Low",
-	"Relative Market RSI 20", "Relative Market RSI 60", "Relative Market RSI 240",
-	"Relative Sector RSI 20", "Relative Sector RSI 60", "Relative Sector RSI 240", 
+	"Relative Market RSI 20",   "Relative Market RSI 60",   "Relative Market RSI 240",
+	"Relative Sector RSI 20",   "Relative Sector RSI 60",   "Relative Sector RSI 240", 
 	"Relative Industry RSI 20", "Relative Industry RSI 60", "Relative Industry RSI 240", 
-	"All Time High", "All Time Low",
-	"All Time Chg High", "All Time Chg Low",
-	"All Time Val High", "All Time Val Low", 
-	"All Time RSI20 High", "All Time RSI20 Low",
-	"All Time RSI60 High", "All Time RSI60 Low",
-	"All Time RSI240 High", "All Time RSI240 Low"
+
 FROM {{ ref('join_meta') }}

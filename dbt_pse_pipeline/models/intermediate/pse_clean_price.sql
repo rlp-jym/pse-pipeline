@@ -6,6 +6,4 @@
     ]
 ) }}
 
-SELECT * 
-FROM {{ ref('pse_clean_price_full') }} 
-WHERE YEAR(Date) = 2026
+SELECT *  FROM {{ ref('pse_clean_price_full') }} WHERE YEAR(Date) = 2026

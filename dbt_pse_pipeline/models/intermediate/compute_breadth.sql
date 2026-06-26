@@ -8,4 +8,5 @@ SELECT *,
 	ROUND(AVG(RSI20)  OVER (PARTITION BY Date, Industry), 2) AS "Industry RSI20",
 	ROUND(AVG(RSI60)  OVER (PARTITION BY Date, Industry), 2) AS "Industry RSI60",
 	ROUND(AVG(RSI240) OVER (PARTITION BY Date, Industry), 2) AS "Industry RSI240"
-FROM {{ ref('compute_yearly') }}
+
+FROM {{ ref('compute_indicators') }}

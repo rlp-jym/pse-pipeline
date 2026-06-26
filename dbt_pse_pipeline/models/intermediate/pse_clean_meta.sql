@@ -23,5 +23,6 @@ SELECT *,
 		WHEN RSI20 > 90 THEN 'Euphoric'
 		WHEN RSI20 > 80 THEN 'Overbought'
 			ELSE '' END AS "Behavioral Alert"
+
 FROM {{ ref('compute_ratios') }}
 ORDER BY "Market Cap" DESC

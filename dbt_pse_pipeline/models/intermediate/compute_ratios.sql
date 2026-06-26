@@ -1,11 +1,15 @@
 WITH 
 ttm AS (
+
 	SELECT *,
 		"CY Revenue" - "PY YTD Revenue" + "CY YTD Revenue" AS "TTM Revenue",
 		"CY Income"  - "PY YTD Income"  + "CY YTD Income"  AS "TTM Income",
 		"CY EPS"     - "PY YTD EPS"     + "CY YTD EPS"     AS "TTM EPS"
+
 	FROM {{ ref('improve_tags') }}
+
 )
+
 SELECT *,
 
 	----- GROWTH AND PROFITABILITY
@@ -27,4 +31,5 @@ SELECT *,
 	ROUND(("Market Cap" / NULLIF("TTM Revenue", 0)) / ((("TTM Revenue" - "CY Revenue") / ABS(NULLIF("CY Revenue", 0))) * 100), 2) AS "PS/G",
 	ROUND(("Market Cap" / NULLIF("TTM Income" , 0)) / ((("TTM Income"  - "CY Income")  / ABS(NULLIF("CY Income" , 0))) * 100), 2) AS "PE/G",
 	ROUND("Market Cap"  / NULLIF("CQ Equity", 0), 2) AS "P/BV Ratio"
+
 FROM ttm
