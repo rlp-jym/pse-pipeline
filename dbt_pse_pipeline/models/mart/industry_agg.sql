@@ -17,6 +17,6 @@ SELECT
 	ROUND((COUNT(*) FILTER (WHERE Close > MA240) / COUNT(*) * 100), 2) AS "MA240 Breadth",
 	SUM("CY Revenue") AS "CY Revenue",
 	SUM("CY Income")  AS "CY Income"
-FROM {{ ref('extend_meta') }}
+FROM {{ ref('pse_clean_meta') }}
 WHERE Sector != 'ETF'
 GROUP BY Sector, Industry

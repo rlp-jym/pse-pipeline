@@ -1,7 +1,7 @@
 WITH fx AS (
     SELECT
-        MAX(CASE WHEN currency = 'USDPHP' THEN rate END) AS usdphp,
-        MAX(CASE WHEN currency = 'CADPHP' THEN rate END) AS cadphp
+        MAX(CASE WHEN currency = 'usdphp' THEN rate END) AS usdphp,
+        MAX(CASE WHEN currency = 'cadphp' THEN rate END) AS cadphp
     FROM {{ ref('fx_rates') }}
 )
 
@@ -32,10 +32,10 @@ SELECT
 			ELSE 1 END AS DOUBLE) AS multiple_year,
 			
 	----- ANNUAL FINANCIAL STATEMENTS
-	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.annual_balance'), '[\\"\\,\\[\\]]', '', 'g'), ' ', 1) AS DOUBLE),
-	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.annual_balance'), '[\\"\\,\\[\\]]', '', 'g'), ' ', 2) AS DOUBLE),
-	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.annual_income'),  '[\\"\\,\\[\\]]', '', 'g'), ' ', 1) AS DOUBLE),
-	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.annual_income'),  '[\\"\\,\\[\\]]', '', 'g'), ' ', 2) AS DOUBLE),
+	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.annual_balance'), '[\"\,\[\]]', '', 'g'), ' ', 1) AS DOUBLE),
+	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.annual_balance'), '[\"\,\[\]]', '', 'g'), ' ', 2) AS DOUBLE),
+	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.annual_income'),  '[\"\,\[\]]', '', 'g'), ' ', 1) AS DOUBLE),
+	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.annual_income'),  '[\"\,\[\]]', '', 'g'), ' ', 2) AS DOUBLE),
 
 	TRY_CAST(strptime("financial_reports.quarterly_period_ended", '%b %d, %Y') AS DATE) AS "Fiscal Quarter End",
 	
@@ -53,12 +53,12 @@ SELECT
 			ELSE 1 END AS DOUBLE) AS multiple_quarter,
 			
 	----- QUARTERLY FINANCIAL STATEMENTS
-	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.quarterly_balance'), '[\\"\\,\\[\\]]', '', 'g'), ' ', 1) AS DOUBLE),
-	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.quarterly_balance'), '[\\"\\,\\[\\]]', '', 'g'), ' ', 2) AS DOUBLE),
-	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.quarterly_income'),  '[\\"\\,\\[\\]]', '', 'g'), ' ', 1) AS DOUBLE),
-	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.quarterly_income'),  '[\\"\\,\\[\\]]', '', 'g'), ' ', 2) AS DOUBLE),        
-	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.quarterly_income'),  '[\\"\\,\\[\\]]', '', 'g'), ' ', 3) AS DOUBLE),
-	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.quarterly_income'),  '[\\"\\,\\[\\]]', '', 'g'), ' ', 4) AS DOUBLE),
+	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.quarterly_balance'), '[\"\,\[\]]', '', 'g'), ' ', 1) AS DOUBLE),
+	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.quarterly_balance'), '[\"\,\[\]]', '', 'g'), ' ', 2) AS DOUBLE),
+	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.quarterly_income'),  '[\"\,\[\]]', '', 'g'), ' ', 1) AS DOUBLE),
+	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.quarterly_income'),  '[\"\,\[\]]', '', 'g'), ' ', 2) AS DOUBLE),        
+	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.quarterly_income'),  '[\"\,\[\]]', '', 'g'), ' ', 3) AS DOUBLE),
+	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.quarterly_income'),  '[\"\,\[\]]', '', 'g'), ' ', 4) AS DOUBLE),
 	
 	----- LAST PRICE AND INDICATOR VALUES
 	Open, High, Low, Close, Chg, Gain, Loss, Value, Volume, MA20, RSI20, MA60, RSI60, MA240, RSI240, 

@@ -3,8 +3,8 @@ WITH tag AS (
 		b."company_details.sector" AS Sector,
 		clean_industry AS Industry,
 		TRY_CAST((((close / LAG(close) OVER (PARTITION BY symbol ORDER BY date ASC)) - 1) * 100) AS DOUBLE) AS Chg
-	FROM {{ ref('stg_price') }} a
-	JOIN {{ ref('stg_meta') }} b ON a.symbol = b."company_info.symbol"
+	FROM {{ ref('price') }} a
+	JOIN {{ ref('meta') }} b ON a.symbol = b."company_info.symbol"
 )
 SELECT
 	TRY_CAST(Date AS DATE) AS Date, 

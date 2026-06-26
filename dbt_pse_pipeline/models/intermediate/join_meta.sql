@@ -1,7 +1,7 @@
 WITH joined AS (
 	SELECT *
-	FROM {{ ref('stg_meta') }} a 
-	LEFT JOIN {{ ref('extend_price_last_day') }} b ON a."company_info.symbol" = b.Symbol
+	FROM {{ ref('meta') }} a 
+	LEFT JOIN {{ ref('pse_clean_price_last_day') }} b ON a."company_info.symbol" = b.Symbol
 )
 
 SELECT * EXCLUDE (
