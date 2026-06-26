@@ -16,7 +16,9 @@ This started as a personal project. After leaving a prop trading role, I lost ac
 
 ## Lineage Graph
 
-<img alt="architecture" src=".docs/07 dbt-dag.png" />
+<img alt="architecture" src=".docs/07a dbt-dag-pse-clean-price.png" />
+<img alt="architecture" src=".docs/07b dbt-dag-pse-clean-meta.png" />
+<img alt="architecture" src=".docs/07c dbt-dag-pse-clean-agg.png" />
 
 ## Pipeline
 
@@ -56,10 +58,11 @@ All three scripts run sequentially in Docker containers. Supabase credentials ar
 
 Power BI connects directly to the public Supabase CSV URLs. Dashboard auto-refreshes on each pipeline run.
 
-<img alt="schema" src=".docs/06a schema relations.png" />
-<img alt="overview" src=".docs/06b overview v2.png" />
-<img alt="matrix" src=".docs/06c matrix v2.png" />
+<img alt="schema" src=".docs/06a schema relations v2.png" />
+<img alt="overview" src=".docs/06b overview v3.png" />
+<img alt="matrix" src=".docs/06c matrix v3.png" />
 <img alt="trend" src=".docs/06d trend v2.png" />
+<img alt="pivot" src=".docs/06e pivot.png" />
 
 ## Stack
 
