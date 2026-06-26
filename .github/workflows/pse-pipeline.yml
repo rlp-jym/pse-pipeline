@@ -26,15 +26,15 @@ jobs:
                   # -e SUPABASE_KEY=$SUPABASE_KEY \
                   # pse-pipeline:v01 uv run python pse_pipeline_price.py
 
-            - name: Run meta pipeline
-              env:
-                SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-                SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-              run: |
-                docker run --rm \
-                  -e SUPABASE_URL=$SUPABASE_URL \
-                  -e SUPABASE_KEY=$SUPABASE_KEY \
-                  pse-pipeline:v01 uv run python pse_pipeline_meta.py
+            # - name: Run meta pipeline
+            #   env:
+            #     SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+            #     SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+            #   run: |
+            #     docker run --rm \
+            #       -e SUPABASE_URL=$SUPABASE_URL \
+            #       -e SUPABASE_KEY=$SUPABASE_KEY \
+            #       pse-pipeline:v01 uv run python pse_pipeline_meta.py
 
             - name: Run dbt pipeline
               env:
