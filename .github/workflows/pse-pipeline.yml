@@ -16,25 +16,25 @@ jobs:
               run: docker build -t pse-pipeline:v01 .
               working-directory: ${{ github.workspace }}
 
-            - name: Run price pipeline
-              env:
-                SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-                SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-              run: |
-                docker run --rm \
-                  -e SUPABASE_URL=$SUPABASE_URL \
-                  -e SUPABASE_KEY=$SUPABASE_KEY \
-                  pse-pipeline:v01 uv run python pse_pipeline_price.py
+            # - name: Run price pipeline
+              # env:
+                # SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+                # SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+              # run: |
+                # docker run --rm \
+                  # -e SUPABASE_URL=$SUPABASE_URL \
+                  # -e SUPABASE_KEY=$SUPABASE_KEY \
+                  # pse-pipeline:v01 uv run python pse_pipeline_price.py
 
-            - name: Run meta pipeline
-              env:
-                SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-                SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-              run: |
-                docker run --rm \
-                  -e SUPABASE_URL=$SUPABASE_URL \
-                  -e SUPABASE_KEY=$SUPABASE_KEY \
-                  pse-pipeline:v01 uv run python pse_pipeline_meta.py
+            # - name: Run meta pipeline
+              # env:
+                # SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+                # SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+              # run: |
+                # docker run --rm \
+                  # -e SUPABASE_URL=$SUPABASE_URL \
+                  # -e SUPABASE_KEY=$SUPABASE_KEY \
+                  # pse-pipeline:v01 uv run python pse_pipeline_meta.py
 
             - name: Run dbt pipeline
               env:
@@ -46,7 +46,5 @@ jobs:
                   -e SUPABASE_S3_KEY=$SUPABASE_S3_KEY \
                   -e SUPABASE_S3_SECRET=$SUPABASE_S3_SECRET \
                   -e SUPABASE_S3_ENDPOINT=$SUPABASE_S3_ENDPOINT \
-                  pse-pipeline:v01 uv run dbt run \
-                  --profiles-dir /app/dbt_pse_pipeline \
-                  --project-dir /app/dbt_pse_pipeline
-
+                  pse-pipeline:v01 sh -c "cd /app/dbt_pse_pipeline && uv run dbt seed \
+                  --profiles-dir . && uv run dbt run --profiles-dir ."
