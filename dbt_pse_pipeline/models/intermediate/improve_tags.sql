@@ -1,0 +1,95 @@
+SELECT
+	Symbol, Name, Description, Sector, Industry, "Market Cap", "Shares Out", "Shares Float", "Float Pct",
+
+	"Fiscal Year End",
+	
+	----- BALANCE SHEET, CURRENT YEAR
+	ROUND(CAST(multiple_year * fx_year * "financial_reports.annual_balance_sheet.Current Assets"              AS BIGINT), 0) AS "CY Current Assets",
+	ROUND(CAST(multiple_year * fx_year * "financial_reports.annual_balance_sheet.Total Assets"                AS BIGINT), 0) AS "CY Total Assets",
+	ROUND(CAST(multiple_year * fx_year * "financial_reports.annual_balance_sheet.Current Liabilities"         AS BIGINT), 0) AS "CY Current Liabilities",
+	ROUND(CAST(multiple_year * fx_year * "financial_reports.annual_balance_sheet.Total Liabilities"           AS BIGINT), 0) AS "CY Total Liabilities",
+	ROUND(CAST(multiple_year * fx_year * "financial_reports.annual_balance_sheet.Retained Earnings/(Deficit)" AS BIGINT), 0) AS "CY Retained Earnings",
+	ROUND(CAST(multiple_year * fx_year * "financial_reports.annual_balance_sheet.Stockholders' Equity"        AS BIGINT), 0) AS "CY Equity",
+	ROUND(fx_year * "financial_reports.annual_balance_sheet.Book Value Per Share"                                       , 2) AS "CY BVPS",
+	
+	----- BALANCE SHEET, PREVIOUS YEAR
+	ROUND(CAST(multiple_year * fx_year * "financial_reports.annual_balance_sheet.Current Assets_1"              AS BIGINT), 0) AS "PY Current Assets",
+	ROUND(CAST(multiple_year * fx_year * "financial_reports.annual_balance_sheet.Total Assets_1"                AS BIGINT), 0) AS "PY Total Assets",
+	ROUND(CAST(multiple_year * fx_year * "financial_reports.annual_balance_sheet.Current Liabilities_1"         AS BIGINT), 0) AS "PY Current Liabilities",
+	ROUND(CAST(multiple_year * fx_year * "financial_reports.annual_balance_sheet.Total Liabilities_1"           AS BIGINT), 0) AS "PY Total Liabilities",
+	ROUND(CAST(multiple_year * fx_year * "financial_reports.annual_balance_sheet.Retained Earnings/(Deficit)_1" AS BIGINT), 0) AS "PY Retained Earnings",
+	ROUND(CAST(multiple_year * fx_year * "financial_reports.annual_balance_sheet.Stockholders' Equity_1"        AS BIGINT), 0) AS "PY Equity",
+	ROUND(fx_year * "financial_reports.annual_balance_sheet.Book Value Per Share_1"                                       , 2) AS "PY BVPS",
+	
+	----- INCOME STATEMENT, CURRENT YEAR
+	ROUND(CAST(multiple_year * fx_year * "financial_reports.annual_income_statement.Gross Revenue"               AS BIGINT), 0) AS "CY Revenue",
+	ROUND(CAST(multiple_year * fx_year * "financial_reports.annual_income_statement.Net Income/(Loss) After Tax" AS BIGINT), 0) AS "CY Income",
+	ROUND(fx_year * "financial_reports.annual_income_statement.Earnings/(Loss) Per Share (Basic)"                          , 2) AS "CY EPS",
+	
+	----- INCOME STATEMENT, PREVIOUS YEAR
+	ROUND(CAST(multiple_year * fx_year * "financial_reports.annual_income_statement.Gross Revenue_1"               AS BIGINT), 0) AS "PY Revenue",
+	ROUND(CAST(multiple_year * fx_year * "financial_reports.annual_income_statement.Net Income/(Loss) After Tax_1" AS BIGINT), 0) AS "PY Income",
+	ROUND(fx_year * "financial_reports.annual_income_statement.Earnings/(Loss) Per Share (Basic)_1"                          , 2) AS "PY EPS",
+
+	"Fiscal Quarter End",
+	
+	----- BALANCE SHEET, CURRENT QUARTER
+	ROUND(CAST(multiple_quarter * fx_quarter * "financial_reports.quarterly_balance_sheet.Current Assets" 			   AS BIGINT), 0) AS "CQ Current Assets",
+	ROUND(CAST(multiple_quarter * fx_quarter * "financial_reports.quarterly_balance_sheet.Total Assets" 			   AS BIGINT), 0) AS "CQ Total Assets",
+	ROUND(CAST(multiple_quarter * fx_quarter * "financial_reports.quarterly_balance_sheet.Current Liabilities"         AS BIGINT), 0) AS "CQ Current Liabilities",
+	ROUND(CAST(multiple_quarter * fx_quarter * "financial_reports.quarterly_balance_sheet.Total Liabilities"           AS BIGINT), 0) AS "CQ Total Liabilities",
+	ROUND(CAST(multiple_quarter * fx_quarter * "financial_reports.quarterly_balance_sheet.Retained Earnings/(Deficit)" AS BIGINT), 0) AS "CQ Retained Earnings",
+	ROUND(CAST(multiple_quarter * fx_quarter * "financial_reports.quarterly_balance_sheet.Stockholders' Equity" 	   AS BIGINT), 0) AS "CQ Equity",
+	ROUND(fx_quarter * "financial_reports.quarterly_balance_sheet.Book Value Per Share" 							             , 2) AS "CQ BVPS",
+	
+	----- BALANCE SHEET, PREVIOUS QUARTER
+	ROUND(CAST(multiple_quarter * fx_quarter * "financial_reports.quarterly_balance_sheet.Current Assets_1" 		     AS BIGINT), 0) AS "PQ Current Assets",
+	ROUND(CAST(multiple_quarter * fx_quarter * "financial_reports.quarterly_balance_sheet.Total Assets_1" 			     AS BIGINT), 0) AS "PQ Total Assets",
+	ROUND(CAST(multiple_quarter * fx_quarter * "financial_reports.quarterly_balance_sheet.Current Liabilities_1" 	     AS BIGINT), 0) AS "PQ Current Liabilities",
+	ROUND(CAST(multiple_quarter * fx_quarter * "financial_reports.quarterly_balance_sheet.Total Liabilities_1" 		     AS BIGINT), 0) AS "PQ Total Liabilities",
+	ROUND(CAST(multiple_quarter * fx_quarter * "financial_reports.quarterly_balance_sheet.Retained Earnings/(Deficit)_1" AS BIGINT), 0) AS "PQ Retained Earnings",
+	ROUND(CAST(multiple_quarter * fx_quarter * "financial_reports.quarterly_balance_sheet.Stockholders' Equity_1" 	     AS BIGINT), 0) AS "PQ Equity",
+	ROUND(fx_quarter * "financial_reports.quarterly_balance_sheet.Book Value Per Share_1" 										   , 2) AS "PQ BVPS",
+	
+	----- INCOME STATEMENT, CURRENT QUARTER
+	ROUND(CAST(multiple_quarter * fx_quarter * "financial_reports.quarterly_income_statement.Gross Revenue" 			  AS BIGINT), 0) AS "CQ Revenue",
+	ROUND(CAST(multiple_quarter * fx_quarter * "financial_reports.quarterly_income_statement.Net Income/(Loss) After Tax" AS BIGINT), 0) AS "CQ Income",
+	ROUND(fx_quarter * "financial_reports.quarterly_income_statement.Earnings/(Loss) Per Share (Basic)" 							, 2) AS "CQ EPS",
+	
+	----- INCOME STATEMENT, PREVIOUS QUARTER
+	ROUND(CAST(multiple_quarter * fx_quarter * "financial_reports.quarterly_income_statement.Gross Revenue_1" 		  	    AS BIGINT), 0) AS "PQ Revenue",
+	ROUND(CAST(multiple_quarter * fx_quarter * "financial_reports.quarterly_income_statement.Net Income/(Loss) After Tax_1" AS BIGINT), 0) AS "PQ Income",
+	ROUND(fx_quarter * "financial_reports.quarterly_income_statement.Earnings/(Loss) Per Share (Basic)_1" 						      , 2) AS "PQ EPS",
+	
+	----- INCOME STATEMENT, CURRENT YEAR TO DATE
+	ROUND(CAST(multiple_quarter * fx_quarter * "financial_reports.quarterly_income_statement.Gross Revenue_2" 			    AS BIGINT), 0) AS "CY YTD Revenue",
+	ROUND(CAST(multiple_quarter * fx_quarter * "financial_reports.quarterly_income_statement.Net Income/(Loss) After Tax_2" AS BIGINT), 0) AS "CY YTD Income",
+	ROUND(fx_quarter * "financial_reports.quarterly_income_statement.Earnings/(Loss) Per Share (Basic)_2" 							  , 2) AS "CY YTD EPS",
+	
+	----- INCOME STATEMENT, PREVIOUS YEAR TO DATE
+	ROUND(CAST(multiple_quarter * fx_quarter * "financial_reports.quarterly_income_statement.Gross Revenue_3" 			    AS BIGINT), 0) AS "PY YTD Revenue",
+	ROUND(CAST(multiple_quarter * fx_quarter * "financial_reports.quarterly_income_statement.Net Income/(Loss) After Tax_3" AS BIGINT), 0) AS "PY YTD Income",
+	ROUND(fx_quarter * "financial_reports.quarterly_income_statement.Earnings/(Loss) Per Share (Basic)_3" 							  , 2) AS "PY YTD EPS",
+	
+	----- LAST PRICE AND INDICATOR VALUES
+	Open, High, Low, Close, Chg, Gain, Loss, Value, Volume, MA20, RSI20, MA60, RSI60, MA240, RSI240, 
+	"Month High", "Month Low", "Month Chg High", "Month Chg Low", "Month Val High", "Month Val Low",
+	"Quarter High", "Quarter Low", "Quarter Chg High", "Quarter Chg Low", "Quarter Val High", "Quarter Val Low",
+	"Year High", "Year Low", "Year Chg High", "Year Chg Low", "Year Val High", "Year Val Low",
+	"Market RSI20", "Market RSI60", "Market RSI240", 
+	"Sector RSI20", "Sector RSI60", "Sector RSI240", 
+	"Industry RSI20", "Industry RSI60", "Industry RSI240", 
+	"Relative Month High", "Relative Month Low",
+	"Relative Quarter High", "Relative Quarter Low",
+	"Relative Year High", "Relative Year Low", 
+	"Relative All Time High", "Relative All Time Low",
+	"Relative Market RSI 20", "Relative Market RSI 60", "Relative Market RSI 240",
+	"Relative Sector RSI 20", "Relative Sector RSI 60", "Relative Sector RSI 240", 
+	"Relative Industry RSI 20", "Relative Industry RSI 60", "Relative Industry RSI 240", 
+	"All Time High", "All Time Low",
+	"All Time Chg High", "All Time Chg Low",
+	"All Time Val High", "All Time Val Low", 
+	"All Time RSI20 High", "All Time RSI20 Low",
+	"All Time RSI60 High", "All Time RSI60 Low",
+	"All Time RSI240 High", "All Time RSI240 Low"
+FROM {{ ref('normalize_values') }}

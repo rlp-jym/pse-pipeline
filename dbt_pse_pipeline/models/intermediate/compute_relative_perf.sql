@@ -1,0 +1,17 @@
+SELECT *,
+	ROUND(((Close  / "Month High")      - 1) * 100, 2) AS "Relative Month High",
+	ROUND(((Close  / "Month Low")       - 1) * 100, 2) AS "Relative Month Low",
+	ROUND(((Close  / "Quarter High")    - 1) * 100, 2) AS "Relative Quarter High",
+	ROUND(((Close  / "Quarter Low")     - 1) * 100, 2) AS "Relative Quarter Low",
+	ROUND(((Close  / "Year High")       - 1) * 100, 2) AS "Relative Year High",
+	ROUND(((Close  / "Year Low")        - 1) * 100, 2) AS "Relative Year Low",
+	ROUND(((RSI20  / "Market RSI20")	- 1) * 100, 2) AS "Relative Market RSI 20",
+	ROUND(((RSI60  / "Market RSI60") 	- 1) * 100, 2) AS "Relative Market RSI 60",
+	ROUND(((RSI240 / "Market RSI240")   - 1) * 100, 2) AS "Relative Market RSI 240",
+	ROUND(((RSI20  / "Sector RSI20")    - 1) * 100, 2) AS "Relative Sector RSI 20",
+	ROUND(((RSI60  / "Sector RSI60")    - 1) * 100, 2) AS "Relative Sector RSI 60",
+	ROUND(((RSI240 / "Sector RSI240")   - 1) * 100, 2) AS "Relative Sector RSI 240",
+	ROUND(((RSI20  / "Industry RSI20")  - 1) * 100, 2) AS "Relative Industry RSI 20",
+	ROUND(((RSI60  / "Industry RSI60")  - 1) * 100, 2) AS "Relative Industry RSI 60",
+	ROUND(((RSI240 / "Industry RSI240") - 1) * 100, 2) AS "Relative Industry RSI 240"
+FROM {{ ref('compute_breadth') }}

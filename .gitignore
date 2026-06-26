@@ -1,8 +1,12 @@
-# Generated files
-*.csv
-*.parquet
+# generated files
 *.pbix
-temp.txt
+*.parquet
+
+# dbt-duckdb
+dev.duckdb
+target/
+dbt_packages/
+logs/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
