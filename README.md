@@ -44,9 +44,11 @@ Two scrapers built with AI targeting [PSE EDGE](https://edge.pse.com.ph):
 
 Both include rate limiting and error handling to survive partial failures.
 
+<img alt="input" src=".docs/02 input.png" />
+
 Output:  individual `.parquet` files per ticker  →  uploaded to `pse-price` and `pse-meta` Supabase buckets.
 
-<img alt="input" src=".docs/02 input.png" />
+<img alt="input" src=".docs/04 storage.png" />
 
 ### 2.  Process — `pse_pipeline_dbt.py`
 
@@ -97,3 +99,5 @@ Power BI connects directly to the public Supabase CSV URLs.  One-click refresh.
 **DuckDB over Pandas**:  Reads Parquet directly from S3 without loading into memory.  Transformation runs in-process, no database server needed.
 
 **Parquet as storage format**:  Columnar, lightweight, works natively with DuckDB and most BI tools.
+
+**On computations**:  All transformation and computation is pushed to DuckDB.  Power BI receives pre-computed, clean parquet files.  This keeps the dashboard fast and the logic version-controlled in SQL where it belongs.
