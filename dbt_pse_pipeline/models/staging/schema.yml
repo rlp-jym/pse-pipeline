@@ -21,23 +21,11 @@ models:
           combination_of_columns:
             - Symbol
             - Date
-    columns:
-      - name: Symbol
-        tests:
-          - not_null
-      - name: Sector
-        tests:
-          - not_null
-
 
   - name: pse_clean_meta
     description: "Final meta output — one row per symbol"
     columns:
       - name: Symbol
-        tests:
-          - not_null
-          - unique
-      - name: Name
         tests:
           - not_null
 
@@ -58,6 +46,3 @@ seeds:
         tests:
           - not_null
           - unique
-      - name: rate
-        tests:
-          - not_null

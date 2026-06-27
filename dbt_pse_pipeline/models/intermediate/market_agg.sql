@@ -1,4 +1,6 @@
-SELECT 'Total Market' AS Sector, 'Total Market' AS Industry, 
+SELECT
+	'Total Market' AS Sector,
+	'Total Market' AS Industry, 
 	COUNT(*) AS Count,
 	ROUND(CAST(SUM("Value")                AS BIGINT), 0) AS Turnover,
 	ROUND(CAST(SUM("Market Cap")           AS BIGINT), 0) AS "Market Cap",
@@ -15,5 +17,6 @@ SELECT 'Total Market' AS Sector, 'Total Market' AS Industry,
 	ROUND((COUNT(*) FILTER (WHERE Close > MA240) / COUNT(*) * 100), 2) AS "MA240 Breadth",
 	SUM("CY Revenue") AS "CY Revenue",
 	SUM("CY Income")  AS "CY Income"
+	
 FROM {{ ref('pse_clean_meta') }}
 WHERE Sector != 'ETF'

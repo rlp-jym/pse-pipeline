@@ -19,7 +19,6 @@ SELECT
 	ROUND("Shares Out" * "Float Pct" / 100, 0) AS "Shares Float",
 
 	TRY_CAST(strptime("financial_reports.annual_fiscal_year_ended", '%b %d, %Y') AS DATE) AS "Fiscal Year End",
-	
 	----- ANNUAL FX CONVERT
 	CAST(CASE 
 		WHEN LOWER("financial_reports.annual_currency") ILIKE '%c$%'	 THEN (SELECT cadphp FROM fx)
@@ -32,7 +31,6 @@ SELECT
 		WHEN LOWER("financial_reports.annual_currency") ILIKE '%thou%' THEN 1000
 		WHEN LOWER("financial_reports.annual_currency") ILIKE '%000%'  THEN 1000
 			ELSE 1 END AS DOUBLE) AS multiple_year,
-			
 	----- ANNUAL FINANCIAL STATEMENTS
 	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.annual_balance'), '[\"\,\[\]]', '', 'g'), ' ', 1) AS DOUBLE),
 	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.annual_balance'), '[\"\,\[\]]', '', 'g'), ' ', 2) AS DOUBLE),
@@ -40,7 +38,6 @@ SELECT
 	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.annual_income'),  '[\"\,\[\]]', '', 'g'), ' ', 2) AS DOUBLE),
 
 	TRY_CAST(strptime("financial_reports.quarterly_period_ended", '%b %d, %Y') AS DATE) AS "Fiscal Quarter End",
-	
 	----- QUARTERLY FX CONVERT
 	CAST(CASE 
 		WHEN LOWER("financial_reports.quarterly_currency") ILIKE '%c$%'	    THEN (SELECT cadphp FROM fx)
@@ -53,7 +50,6 @@ SELECT
 		WHEN LOWER("financial_reports.quarterly_currency") ILIKE '%thou%' THEN 1000
 		WHEN LOWER("financial_reports.quarterly_currency") ILIKE '%000%'  THEN 1000
 			ELSE 1 END AS DOUBLE) AS multiple_quarter,
-			
 	----- QUARTERLY FINANCIAL STATEMENTS
 	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.quarterly_balance'), '[\"\,\[\]]', '', 'g'), ' ', 1) AS DOUBLE),
 	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.quarterly_balance'), '[\"\,\[\]]', '', 'g'), ' ', 2) AS DOUBLE),
@@ -61,7 +57,7 @@ SELECT
 	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.quarterly_income'),  '[\"\,\[\]]', '', 'g'), ' ', 2) AS DOUBLE),        
 	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.quarterly_income'),  '[\"\,\[\]]', '', 'g'), ' ', 3) AS DOUBLE),
 	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.quarterly_income'),  '[\"\,\[\]]', '', 'g'), ' ', 4) AS DOUBLE),
-	
+
 	----- LAST PRICE AND INDICATOR VALUES
 	Open, High, Low, Close, Chg, Gain, Loss, Value, Volume, MA20, RSI20, MA60, RSI60, MA240, RSI240, 
 	"Month High",    "Month Low",    "Month Chg High",    "Month Chg Low",    "Month Val High",    "Month Val Low",

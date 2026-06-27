@@ -11,7 +11,6 @@ ttm AS (
 )
 
 SELECT *,
-
 	----- GROWTH AND PROFITABILITY
 	ROUND((("TTM Revenue" - "CY Revenue") / ABS(NULLIF("CY Revenue", 0))) * 100, 2) AS "Revenue Growth",
 	ROUND((("TTM Income"  - "CY Income")  / ABS(NULLIF("CY Income" , 0))) * 100, 2) AS "Income Growth",
@@ -19,12 +18,10 @@ SELECT *,
 	ROUND("TTM Income" / NULLIF("TTM Revenue"                 , 0) * 100, 2) AS "Income Margin",
 	ROUND("TTM Income" / NULLIF("CQ Total Assets", 0) * 100, 2) AS "Return On Assets",
 	ROUND("TTM Income" / NULLIF("CQ Equity"      , 0) * 100, 2) AS "Return On Equity",
-
 	----- LIQUIDITY AND SOLVENCY
 	ROUND("CQ Current Assets"    / NULLIF("CQ Current Liabilities", 0), 2) AS "Current Ratio",
 	ROUND("CQ Total Liabilities" / NULLIF("CQ Total Assets"       , 0), 2) AS "Debt Ratio",     ----------> proxy: total debt not available
 	ROUND("CQ Total Liabilities" / NULLIF("CQ Equity"             , 0), 2) AS "D/E Ratio",      ----------> proxy: total debt not available
-
 	----- VALUATION
 	ROUND("Market Cap"  / NULLIF("TTM Revenue", 0), 2) AS "P/S",
 	ROUND("Market Cap"  / NULLIF("TTM Income" , 0), 2) AS "P/E",
