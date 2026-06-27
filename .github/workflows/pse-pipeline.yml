@@ -49,6 +49,7 @@ jobs:
                   pse-pipeline:v01 sh -c "
                     cd /app/dbt_pse_pipeline && \
                     uv run python seed_fx_rates.py && \
+                    uv run dbt deps --profiles-dir . && \
                     uv run dbt seed --profiles-dir . && \
                     uv run dbt build --profiles-dir .
                   "
