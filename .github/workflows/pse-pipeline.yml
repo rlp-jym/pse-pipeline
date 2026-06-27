@@ -2,7 +2,7 @@ name: PSE Pipeline
 
 on:
     schedule:
-        - cron: '0 18 * * 0-5'
+        - cron: '0 18 * * 0-6'
     workflow_dispatch: 
 
 jobs:
