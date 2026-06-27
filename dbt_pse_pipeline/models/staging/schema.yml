@@ -1,0 +1,63 @@
+version: 2
+
+models:
+  - name: clean_price
+    description: "Cleaned and typed PSE price data with sector/industry tags"
+    columns:
+      - name: Symbol
+        tests:
+          - not_null
+      - name: Date
+        tests:
+          - not_null
+      - name: Close
+        tests:
+          - not_null
+
+  - name: pse_clean_price
+    description: "Final price output — last day per symbol"
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - Symbol
+            - Date
+    columns:
+      - name: Symbol
+        tests:
+          - not_null
+      - name: Sector
+        tests:
+          - not_null
+
+
+  - name: pse_clean_meta
+    description: "Final meta output — one row per symbol"
+    columns:
+      - name: Symbol
+        tests:
+          - not_null
+          - unique
+      - name: Name
+        tests:
+          - not_null
+
+  - name: pse_clean_agg
+    description: "Aggregated sector/industry rankings"
+    columns:
+      - name: Sector
+        tests:
+          - not_null
+      - name: Industry
+        tests:
+          - not_null
+
+seeds:
+  - name: fx_rates
+    columns:
+      - name: currency
+        tests:
+          - not_null
+          - unique
+      - name: rate
+        tests:
+          - not_null

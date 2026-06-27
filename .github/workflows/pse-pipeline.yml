@@ -50,5 +50,5 @@ jobs:
                     cd /app/dbt_pse_pipeline && \
                     uv run python seed_fx_rates.py && \
                     uv run dbt seed --profiles-dir . && \
-                    uv run dbt run --profiles-dir .
+                    uv run dbt build --profiles-dir .
                   "
