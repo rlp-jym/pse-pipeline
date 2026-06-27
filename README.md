@@ -50,7 +50,7 @@ Output:  individual `.parquet` files per ticker  →  uploaded to `pse-price` an
 
 ### 2.  Process — `pse_pipeline_dbt.py`
 
-dbt Core with DuckDB adapter reads raw parquet files directly from Supabase via S3.  Replaces the single-script CTE factory with 23 modular SQL models:
+dbt Core with DuckDB adapter reads raw parquet files directly from Supabase via S3.  Replaces pse_pipeline_duckdb.py with 23 modular SQL models:
 - Staging:  read raw parquet from S3, union all ticker files
 - Intermediate:  clean and cast types, compute indicators at 3 timeframes (20/60/240 day), rolling highs/lows, breadth, alerts, normalize financials, FX conversion
 - Mart:  aggregate to industry and sector level with profitability, valuation, and breadth rankings
