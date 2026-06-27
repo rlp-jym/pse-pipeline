@@ -4,15 +4,15 @@ An automated daily pipeline that scrapes, processes, and visualizes public equit
 
 ## Background
 
-This started as a personal project. After leaving a prop trading role, I lost access to tools I used daily which are expensive to maintain as an independent trader. I built this to replace those while keeping overhead cost zero. The original version was a manual Power BI dashboard. Functional, but fully manual. This is the proper rebuild: automated, cloud-hosted, and free to run. The DE Zoomcamp I am currently taking pushed me to finally build this properly. I did not follow the curriculum's promoted tools since I just wanted this to be straightforward and light. This project was a side quest that became a good implementation exercise.
+This started as a personal project.  After leaving a prop trading role, I lost access to tools I used daily which are expensive to maintain as an independent trader.  I built this to replace those while keeping overhead cost zero.  The original version was a manual Power BI dashboard.  Functional, but fully manual.  This is the proper rebuild:  automated, cloud-hosted, and free to run.  The DE Zoomcamp I am currently taking pushed me to finally build this properly.  I did not follow the curriculum's promoted tools since I just wanted this to be straightforward and light.  This project was a side quest that became a good implementation exercise.
 
 ## Architecture
 
 <img alt="architecture" src=".docs/01 architecture v2.png" />
 
-**Flow:** PSE EDGE → Scrapers → Supabase → DuckDB → Supabase → Power BI
+**Flow:**  PSE EDGE  →  Scrapers  →  Supabase  →  dbt  →  Supabase  →  Power BI
 
-**Schedule:** GitHub Actions cron, daily 2AM Philippine Time
+**Schedule:**  GitHub Actions cron, daily 2AM Philippine Time
 
 ## Lineage Graph
 
@@ -20,9 +20,22 @@ This started as a personal project. After leaving a prop trading role, I lost ac
 <img alt="architecture" src=".docs/07b dbt-dag-pse-clean-meta.png" />
 <img alt="architecture" src=".docs/07c dbt-dag-pse-clean-agg.png" />
 
+## Data Quality
+
+<img alt="architecture" src=".docs/08 data quality.png" />
+
+dbt build runs 14 automated tests after each transformation layer:
+
+- not_null:  critical fields must never be empty
+- unique:  one row per Symbol in meta and agg outputs
+- unique_combination_of_columns:  Symbol+Date must be unique in time-series (via dbt-utils)
+- not_null on seed:  FX rates must always be present before transformation runs
+
+If any test fails, the pipeline stops and GitHub Actions sends a failure notification.  This protects the clean bucket and dashboard.
+
 ## Pipeline
 
-### 1. Collect — `pse_pipeline_price.py` and `pse_pipeline_meta.py`
+### 1.  Collect — `pse_pipeline_price.py` and `pse_pipeline_meta.py`
 
 Two scrapers built with AI targeting [PSE EDGE](https://edge.pse.com.ph):
 
@@ -31,32 +44,32 @@ Two scrapers built with AI targeting [PSE EDGE](https://edge.pse.com.ph):
 
 Both include rate limiting and error handling to survive partial failures.
 
-Output: individual `.parquet` files per ticker → uploaded to `pse-price` and `pse-meta` Supabase buckets.
+Output:  individual `.parquet` files per ticker  →  uploaded to `pse-price` and `pse-meta` Supabase buckets.
 
 <img alt="input" src=".docs/02 input.png" />
 
-### 2. Process — `pse_pipeline_dbt.py`
+### 2.  Process — `pse_pipeline_dbt.py`
 
-dbt Core with DuckDB adapter reads raw parquet files directly from Supabase via S3. Replaces the single-script CTE factory with 23 modular SQL models across three layers:
+dbt Core with DuckDB adapter reads raw parquet files directly from Supabase via S3.  Replaces the single-script CTE factory with 23 modular SQL models:
 - Staging:  read raw parquet from S3, union all ticker files
 - Intermediate:  clean and cast types, compute indicators at 3 timeframes (20/60/240 day), rolling highs/lows, breadth, alerts, normalize financials, FX conversion
 - Mart:  aggregate to industry and sector level with profitability, valuation, and breadth rankings
 
-Output: `pse_clean_price`, `pse_clean_meta`, `pse_clean_agg` as both `.parquet` and `.csv` → uploaded to `pse-clean` Supabase bucket (public).
+Output:  `pse_clean_price`, `pse_clean_meta`, `pse_clean_agg` as both `.parquet` and `.csv`  →  uploaded to `pse-clean` Supabase bucket (public).
 
 <img alt="output price" src=".docs/05a output price df.png" />
 <img alt="output meta" src=".docs/05b output meta df.png" />
 <img alt="output agg" src=".docs/05c output agg df.png" />
 
-### 3. Automate — GitHub Actions
+### 3.  Automate — GitHub Actions
 
-All three scripts run sequentially in Docker containers. Supabase credentials are stored as GitHub Secrets.
+All three scripts run sequentially in Docker containers.  Supabase credentials are stored as GitHub Secrets.
 
 <img alt="automation" src=".docs/03 automation v2.png" />
 
-### 4. Visualize — Power BI
+### 4.  Visualize — Power BI
 
-Power BI connects directly to the public Supabase CSV URLs. Dashboard auto-refreshes on each pipeline run.
+Power BI connects directly to the public Supabase CSV URLs.  One-click refresh.
 
 <img alt="schema" src=".docs/06a schema relations v2.png" />
 <img alt="overview" src=".docs/06b overview v3.png" />
@@ -77,10 +90,10 @@ Power BI connects directly to the public Supabase CSV URLs. Dashboard auto-refre
 
 ## Decisions
 
-**GitHub Actions over Kestra**:  Single sequential job, cron-triggered, free. Right tool for this scale.
+**GitHub Actions over Kestra**:  Single sequential job, cron-triggered, free.  Right tool for this scale.
 
-**dbt over single Python script**:  Same SQL logic but modular. Each transformation is independently testable and visible in the lineage graph. Easier to debug and extend.
+**dbt over single Python script**:  Same SQL logic but modular.  Each transformation is independently testable and visible in the lineage graph.  Easier to debug and extend.
 
-**DuckDB over Pandas**:  Reads Parquet directly from S3 without loading into memory. Transformation runs in-process, no database server needed.
+**DuckDB over Pandas**:  Reads Parquet directly from S3 without loading into memory.  Transformation runs in-process, no database server needed.
 
 **Parquet as storage format**:  Columnar, lightweight, works natively with DuckDB and most BI tools.
