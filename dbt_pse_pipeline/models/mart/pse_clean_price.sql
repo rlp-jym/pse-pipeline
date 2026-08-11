@@ -7,7 +7,7 @@
 ) }}
 
 SELECT
-    , TRY_CAST("Date" AS DATE) AS "Date"
+    TRY_CAST("Date" AS DATE) AS "Date"
     , "Symbol", "Sector", "Industry"
     , TRY_CAST("Open" AS NUMERIC) AS "Open"
     , TRY_CAST("High" AS NUMERIC) AS "High"
