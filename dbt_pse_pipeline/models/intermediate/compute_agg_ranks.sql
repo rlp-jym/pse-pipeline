@@ -18,6 +18,7 @@ pre_rank AS (
 		DENSE_RANK() OVER (ORDER BY BreadthMA20  DESC) AS RankBreadth20,
 		DENSE_RANK() OVER (ORDER BY BreadthMA30  DESC) AS RankBreadth30,
 		DENSE_RANK() OVER (ORDER BY BreadthMA60  DESC) AS RankBreadth60,
+		DENSE_RANK() OVER (ORDER BY BreadthMA120 DESC) AS RankBreadth120,
 		DENSE_RANK() OVER (ORDER BY BreadthMA240 DESC) AS RankBreadth240
 		
 	FROM {{ ref('compute_agg_ratios') }}

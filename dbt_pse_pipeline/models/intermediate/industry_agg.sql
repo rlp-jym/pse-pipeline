@@ -17,6 +17,7 @@ SELECT
 	ROUND(CAST(AVG(RSI20)              AS NUMERIC), 2) AS AvgRSI20,
 	ROUND(CAST(AVG(RSI30)              AS NUMERIC), 2) AS AvgRSI30,
 	ROUND(CAST(AVG(RSI60)              AS NUMERIC), 2) AS AvgRSI60,
+	ROUND(CAST(AVG(RSI120)             AS NUMERIC), 2) AS AvgRSI120,
 	ROUND(CAST(AVG(RSI240)             AS NUMERIC), 2) AS AvgRSI240,
 	--------------------------------------------------
 	ROUND((COUNT(*) FILTER (WHERE Close > MA5)   / COUNT(*) * 100), 2) AS BreadthMA5,
@@ -24,6 +25,7 @@ SELECT
 	ROUND((COUNT(*) FILTER (WHERE Close > MA20)  / COUNT(*) * 100), 2) AS BreadthMA20,
 	ROUND((COUNT(*) FILTER (WHERE Close > MA30)  / COUNT(*) * 100), 2) AS BreadthMA30,
 	ROUND((COUNT(*) FILTER (WHERE Close > MA60)  / COUNT(*) * 100), 2) AS BreadthMA60,
+	ROUND((COUNT(*) FILTER (WHERE Close > MA120) / COUNT(*) * 100), 2) AS BreadthMA120,
 	ROUND((COUNT(*) FILTER (WHERE Close > MA240) / COUNT(*) * 100), 2) AS BreadthMA240,
 	
 FROM {{ ref('pse_clean_meta') }}
