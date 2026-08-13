@@ -25,8 +25,8 @@ SELECT *,
 	----- VALUATION
 	ROUND(MarketCap  / NULLIF(TTMRevenue, 0), 2) AS PSRatio,
 	ROUND(MarketCap  / NULLIF(TTMIncome , 0), 2) AS PERatio,
-	ROUND(MarketCap  / NULLIF(CQEquity  , 0), 2) AS PBVRatio
+	ROUND(MarketCap  / NULLIF(CQEquity  , 0), 2) AS PBVRatio,
 	ROUND((MarketCap / NULLIF(TTMRevenue, 0)) / (((TTMRevenue - CYRevenue) / ABS(NULLIF(CYRevenue, 0))) * 100), 2) AS PSGRatio,
-	ROUND((MarketCap / NULLIF(TTMIncome , 0)) / (((TTMIncome  - CYIncome)  / ABS(NULLIF(CYIncome , 0))) * 100), 2) AS PEGRatio,
+	ROUND((MarketCap / NULLIF(TTMIncome , 0)) / (((TTMIncome  - CYIncome)  / ABS(NULLIF(CYIncome , 0))) * 100), 2) AS PEGRatio
 
 FROM ttm
