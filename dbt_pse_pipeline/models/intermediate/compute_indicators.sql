@@ -79,6 +79,22 @@ compute60 AS (
 
 ),
 
+compute120 AS (
+
+	SELECT *,
+		MAX(High)  OVER w AS High120,
+		MIN(Low)   OVER w AS Low120,
+		ROUND(AVG(Close) OVER w, 2) AS MA120,
+		ROUND(TRY_CAST(100 - (100 / (1 + (AVG(Gain) OVER w) / NULLIF((AVG(Loss) OVER w), 0))) AS NUMERIC), 2) AS RSI120
+
+	FROM compute60
+	WINDOW w AS (
+		PARTITION BY Symbol ORDER BY Date
+		ROWS BETWEEN 119 PRECEDING AND CURRENT ROW ----------> simplify, just 20x12
+	)
+
+),
+
 compute240 AS (
 
 	SELECT *,
@@ -87,7 +103,7 @@ compute240 AS (
 		ROUND(AVG(Close) OVER w, 2) AS MA240,
 		ROUND(TRY_CAST(100 - (100 / (1 + (AVG(Gain) OVER w) / NULLIF((AVG(Loss) OVER w), 0))) AS NUMERIC), 2) AS RSI240
 
-	FROM compute60
+	FROM compute120
 	WINDOW w AS (
 		PARTITION BY Symbol ORDER BY Date
 		ROWS BETWEEN 239 PRECEDING AND CURRENT ROW ----------> simplify, just 20x12

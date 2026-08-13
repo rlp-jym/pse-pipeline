@@ -1,6 +1,6 @@
 SELECT
-	'Total Market' AS Sector,
-	'Total Market' AS Industry, 
+	Sector,
+	Industry, 
 	COUNT(*) AS Count,
 	ROUND(CAST(SUM(Value)              AS BIGINT),  0) AS Turnover,
 	ROUND(CAST(SUM(MarketCap)          AS BIGINT),  0) AS MarketCap,

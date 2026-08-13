@@ -20,7 +20,7 @@ SELECT *,
 	ROUND(TTMIncome / NULLIF(CQEquity     , 0) * 100, 2) AS ReturnOnEquity,
 	----- LIQUIDITY AND SOLVENCY
 	ROUND(CQAssetsCurrent    / NULLIF(CQLiabilitiesCurrent, 0), 2) AS CurrentRatio,
-	ROUND(CQLiabilitiesTotal / NULLIF(CQAssetsTotal       , 0), 2) AS LiabilitiesAssetsRatio,       ----------> proxy: total debt not available
+	ROUND(CQLiabilitiesTotal / NULLIF(CQAssetsTotal       , 0), 2) AS LiabilitiesAssetsRatio, ----------> proxy: total debt not available
 	ROUND(CQLiabilitiesTotal / NULLIF(CQEquity            , 0), 2) AS LiabilitiesEquityRatio, ----------> proxy: total debt not available
 	----- VALUATION
 	ROUND(MarketCap  / NULLIF(TTMRevenue, 0), 2) AS PSRatio,
