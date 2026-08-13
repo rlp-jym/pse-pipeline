@@ -21,7 +21,7 @@ compute10 AS (
 		MAX(High)  OVER w AS High10,
 		MIN(Low)   OVER w AS Low10,
 		ROUND(AVG(Close) OVER w, 2) AS MA10,
-		ROUND(TRY_CAST(100 - (100 / (1 + (AVG(Gain) OVER w) / NULLIF((AVG(Loss) OVER w), 0))) AS DOUBLE), 2) AS RSI10
+		ROUND(TRY_CAST(100 - (100 / (1 + (AVG(Gain) OVER w) / NULLIF((AVG(Loss) OVER w), 0))) AS NUMERIC), 2) AS RSI10
 
 	FROM compute5
 	WINDOW w AS (
@@ -37,7 +37,7 @@ compute20 AS (
 		MAX(High)  OVER w AS High20,
 		MIN(Low)   OVER w AS Low20,
 		ROUND(AVG(Close) OVER w, 2) AS MA20,
-		ROUND(TRY_CAST(100 - (100 / (1 + (AVG(Gain) OVER w) / NULLIF((AVG(Loss) OVER w), 0))) AS DOUBLE), 2) AS RSI20
+		ROUND(TRY_CAST(100 - (100 / (1 + (AVG(Gain) OVER w) / NULLIF((AVG(Loss) OVER w), 0))) AS NUMERIC), 2) AS RSI20
 
 	FROM compute10
 	WINDOW w AS (
@@ -53,7 +53,7 @@ compute30 AS (
 		MAX(High)  OVER w AS High30,
 		MIN(Low)   OVER w AS Low30,
 		ROUND(AVG(Close) OVER w, 2) AS MA30,
-		ROUND(TRY_CAST(100 - (100 / (1 + (AVG(Gain) OVER w) / NULLIF((AVG(Loss) OVER w), 0))) AS DOUBLE), 2) AS RSI30
+		ROUND(TRY_CAST(100 - (100 / (1 + (AVG(Gain) OVER w) / NULLIF((AVG(Loss) OVER w), 0))) AS NUMERIC), 2) AS RSI30
 
 	FROM compute20
 	WINDOW w AS (
@@ -69,7 +69,7 @@ compute60 AS (
 		MAX(High)  OVER w AS High60,
 		MIN(Low)   OVER w AS Low60,
 		ROUND(AVG(Close) OVER w, 2) AS MA60,
-		ROUND(TRY_CAST(100 - (100 / (1 + (AVG(Gain) OVER w) / NULLIF((AVG(Loss) OVER w), 0))) AS DOUBLE), 2) AS RSI60
+		ROUND(TRY_CAST(100 - (100 / (1 + (AVG(Gain) OVER w) / NULLIF((AVG(Loss) OVER w), 0))) AS NUMERIC), 2) AS RSI60
 
 	FROM compute30
 	WINDOW w AS (
@@ -85,7 +85,7 @@ compute240 AS (
 		MAX(High)  OVER w AS High240,
 		MIN(Low)   OVER w AS Low240,
 		ROUND(AVG(Close) OVER w, 2) AS MA240,
-		ROUND(TRY_CAST(100 - (100 / (1 + (AVG(Gain) OVER w) / NULLIF((AVG(Loss) OVER w), 0))) AS DOUBLE), 2) AS RSI240
+		ROUND(TRY_CAST(100 - (100 / (1 + (AVG(Gain) OVER w) / NULLIF((AVG(Loss) OVER w), 0))) AS NUMERIC), 2) AS RSI240
 
 	FROM compute60
 	WINDOW w AS (
