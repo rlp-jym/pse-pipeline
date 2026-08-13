@@ -151,25 +151,24 @@ SELECT
     , TRY_CAST(ROUND(RelativeIndustryRSI60,  2) AS NUMERIC) AS RelativeIndustryRSI60
     , TRY_CAST(ROUND(RelativeIndustryRSI240, 2) AS NUMERIC) AS RelativeIndustryRSI240
 	--------------------------------------------------
-    , ----- Signals
-        CASE
-            WHEN High5 == HighAll THEN 'All Time High'
-    		WHEN High5 == High240 THEN 'Year High'
-    		WHEN High5 == High60  THEN 'Quarter High'
-			WHEN High5 == High20  THEN 'Month High'
-    			ELSE '' END AS Breakout Alert,
-        CASE
-    		WHEN Low5 == LowAll THEN 'All Time Low'
-    		WHEN Low5 == Low240 THEN 'Year Low'
-    		WHEN Low5 == Low60  THEN 'Quarter Low'
-			WHEN Low5 == Low20  THEN 'Month Low'
-    			ELSE '' END AS Breakdown Alert,
-    	CASE
-    		WHEN RSI10 < 10 THEN 'Panic'
-    		WHEN RSI10 < 20 THEN 'Oversold'
-    		WHEN RSI10 > 90 THEN 'Euphoric'
-    		WHEN RSI10 > 80 THEN 'Overbought'
-    			ELSE '' END AS Behavioral Alert
+	, CASE
+		WHEN High5 == HighAll THEN 'All Time High'
+		WHEN High5 == High240 THEN 'Year High'
+		WHEN High5 == High60  THEN 'Quarter High'
+		WHEN High5 == High20  THEN 'Month High'
+			ELSE '' END AS AlertsBreakout
+	, CASE
+		WHEN Low5 == LowAll THEN 'All Time Low'
+		WHEN Low5 == Low240 THEN 'Year Low'
+		WHEN Low5 == Low60  THEN 'Quarter Low'
+		WHEN Low5 == Low20  THEN 'Month Low'
+			ELSE '' END AS AlertsBreakdown
+	, CASE
+		WHEN RSI10 < 10 THEN 'Panic'
+		WHEN RSI10 < 20 THEN 'Oversold'
+		WHEN RSI10 > 90 THEN 'Euphoric'
+		WHEN RSI10 > 80 THEN 'Overbought'
+			ELSE '' END AS AlertsBehavioral
 
 FROM {{ ref('compute_ratios') }}
 ORDER BY MarketCap DESC
