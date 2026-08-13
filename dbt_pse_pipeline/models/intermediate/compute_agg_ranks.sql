@@ -3,19 +3,22 @@ pre_rank AS (
 
 	SELECT *,
 		----- PROFITABILITY RANKINGS, HIGHER IS BETTER
-		DENSE_RANK() OVER (ORDER BY "Revenue Growth"   DESC) AS "Revenue Growth Rank",
-		DENSE_RANK() OVER (ORDER BY "Income Growth"    DESC) AS "Income Growth Rank",
-		DENSE_RANK() OVER (ORDER BY "Income Margin"    DESC) AS "Margin Rank",
-		DENSE_RANK() OVER (ORDER BY "Return on Assets" DESC) AS "ROA Rank",
-		DENSE_RANK() OVER (ORDER BY "Return on Equity" DESC) AS "ROE Rank",
-		----- VALUATION RANKINGS, LOWER IS BETTER
-		DENSE_RANK() OVER (ORDER BY "P/S"  ASC) AS "PS Rank",
-		DENSE_RANK() OVER (ORDER BY "P/E"  ASC) AS "PE Rank",
-		DENSE_RANK() OVER (ORDER BY "P/BV" ASC) AS "PBV Rank",  
+		DENSE_RANK() OVER (ORDER BY GrowthRevenue  DESC) AS RankGrowthRevenue,
+		DENSE_RANK() OVER (ORDER BY GrowthIncome   DESC) AS RankGrowthIncome,
+		DENSE_RANK() OVER (ORDER BY MarginIncome   DESC) AS RankMargin,
+		DENSE_RANK() OVER (ORDER BY ReturnOnAssets DESC) AS RankROA,
+		DENSE_RANK() OVER (ORDER BY ReturnOnEquity DESC) AS RankROE,
+		----- VALUATION RANKINGS, HIGHER IS BETTER
+		DENSE_RANK() OVER (ORDER BY PSRatio  DESC) AS RankPSRatio,
+		DENSE_RANK() OVER (ORDER BY PERatio  DESC) AS RankPERatio,
+		DENSE_RANK() OVER (ORDER BY PBVRatio DESC) AS RankPBVRatio,  
 		----- BREADTH RANKINGS, HIGHER IS BETTER
-		DENSE_RANK() OVER (ORDER BY "MA20 Breadth"  DESC) AS "ST Breadth Rank",
-		DENSE_RANK() OVER (ORDER BY "MA60 Breadth"  DESC) AS "MT Breadth Rank",
-		DENSE_RANK() OVER (ORDER BY "MA240 Breadth" DESC) AS "LT Breadth Rank"
+		DENSE_RANK() OVER (ORDER BY BreadthMA5   DESC) AS RankBreadth5,
+		DENSE_RANK() OVER (ORDER BY BreadthMA10  DESC) AS RankBreadth10,
+		DENSE_RANK() OVER (ORDER BY BreadthMA20  DESC) AS RankBreadth20,
+		DENSE_RANK() OVER (ORDER BY BreadthMA30  DESC) AS RankBreadth30,
+		DENSE_RANK() OVER (ORDER BY BreadthMA60  DESC) AS RankBreadth60,
+		DENSE_RANK() OVER (ORDER BY BreadthMA240 DESC) AS RankBreadth240
 		
 	FROM {{ ref('compute_agg_ratios') }}
 	
@@ -23,18 +26,14 @@ pre_rank AS (
 
 SELECT *,
 	ROUND((
-		"Revenue Growth Rank" +
-		"Income Growth Rank" +
-		"Margin Rank" +
-		"ROA Rank" +
-		"ROE Rank") / 5, 2) AS "Profitability Rank",
+		RankGrowthRevenue + RankGrowthIncome +
+		RankMargin + RankROA + RankROE)
+		/ 5, 2) AS RankProfitability,
 	ROUND((
-		"PS Rank" +
-		"PE Rank" +
-		"PBV Rank") / 3, 2) AS "Valuation Rank",
+		RankPSRatio + RankPERatio + RankPBVRatio)
+		/ 3, 2) AS RankValuation,
 	ROUND((
-		"ST Breadth Rank" +
-		"MT Breadth Rank" +
-		"LT Breadth Rank") / 3, 2) AS "Breadth Rank"
+		RankBreadth20 + RankBreadth60 + RankBreadth240)
+		/ 3, 2) AS RankBreadth
 		
 FROM pre_rank

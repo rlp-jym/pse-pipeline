@@ -1,1 +1,2 @@
-SELECT * FROM {{ ref('compute_relative_perf') }}
+SELECT *
+FROM {{ ref('compute_relative_perf') }}

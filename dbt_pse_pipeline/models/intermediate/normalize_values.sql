@@ -13,66 +13,62 @@ SELECT
 	"company_details.company_description" AS Description,
 	"company_details.sector" 			  AS Sector,
 	clean_industry 						  AS Industry,
-	"Market Cap",
-	"Shares Out",
-	"Float Pct",
-	ROUND("Shares Out" * "Float Pct" / 100, 0) AS "Shares Float",
-
-	TRY_CAST(strptime("financial_reports.annual_fiscal_year_ended", '%b %d, %Y') AS DATE) AS "Fiscal Year End",
+	MarketCap, SharesOut, FloatPct,
+	ROUND(SharesOut * FloatPct / 100, 0)  AS SharesFloat,
+	--------------------------------------------------
+	TRY_CAST(strptime("financial_reports.annual_fiscal_year_ended", '%b %d, %Y') AS DATE) AS FiscalYearEnd,
 	----- ANNUAL FX CONVERT
 	CAST(CASE 
 		WHEN LOWER("financial_reports.annual_currency") ILIKE '%c$%'	 THEN (SELECT cadphp FROM fx)
 		WHEN LOWER("financial_reports.annual_currency") ILIKE '%$%' 	 THEN (SELECT usdphp FROM fx)
 		WHEN LOWER("financial_reports.annual_currency") ILIKE '%usd%' 	 THEN (SELECT usdphp FROM fx)
 		WHEN LOWER("financial_reports.annual_currency") ILIKE '%dollar%' THEN (SELECT usdphp FROM fx)
-			ELSE 1 END AS DOUBLE) AS fx_year,
+			ELSE 1 END AS NUMERIC) AS fxYear,
 	CAST(CASE
 		WHEN LOWER("financial_reports.annual_currency") ILIKE '%mil%'  THEN 1000000
 		WHEN LOWER("financial_reports.annual_currency") ILIKE '%thou%' THEN 1000
 		WHEN LOWER("financial_reports.annual_currency") ILIKE '%000%'  THEN 1000
-			ELSE 1 END AS DOUBLE) AS multiple_year,
+			ELSE 1 END AS NUMERIC) AS multipleYear,
 	----- ANNUAL FINANCIAL STATEMENTS
-	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.annual_balance'), '[\"\,\[\]]', '', 'g'), ' ', 1) AS DOUBLE),
-	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.annual_balance'), '[\"\,\[\]]', '', 'g'), ' ', 2) AS DOUBLE),
-	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.annual_income'),  '[\"\,\[\]]', '', 'g'), ' ', 1) AS DOUBLE),
-	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.annual_income'),  '[\"\,\[\]]', '', 'g'), ' ', 2) AS DOUBLE),
-
-	TRY_CAST(strptime("financial_reports.quarterly_period_ended", '%b %d, %Y') AS DATE) AS "Fiscal Quarter End",
+	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.annual_balance'), '[\"\,\[\]]', '', 'g'), ' ', 1) AS NUMERIC),
+	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.annual_balance'), '[\"\,\[\]]', '', 'g'), ' ', 2) AS NUMERIC),
+	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.annual_income'),  '[\"\,\[\]]', '', 'g'), ' ', 1) AS NUMERIC),
+	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.annual_income'),  '[\"\,\[\]]', '', 'g'), ' ', 2) AS NUMERIC),
+	--------------------------------------------------
+	TRY_CAST(strptime("financial_reports.quarterly_period_ended", '%b %d, %Y') AS DATE) AS FiscalQuarterEnd,
 	----- QUARTERLY FX CONVERT
 	CAST(CASE 
 		WHEN LOWER("financial_reports.quarterly_currency") ILIKE '%c$%'	    THEN (SELECT cadphp FROM fx)
 		WHEN LOWER("financial_reports.quarterly_currency") ILIKE '%$%'		THEN (SELECT usdphp FROM fx)
 		WHEN LOWER("financial_reports.quarterly_currency") ILIKE '%usd%' 	THEN (SELECT usdphp FROM fx)
 		WHEN LOWER("financial_reports.quarterly_currency") ILIKE '%dollar%' THEN (SELECT usdphp FROM fx)
-			ELSE 1 END AS DOUBLE) AS fx_quarter,
+			ELSE 1 END AS NUMERIC) AS fxQuarter,
 	CAST(CASE
 		WHEN LOWER("financial_reports.quarterly_currency") ILIKE '%mil%'  THEN 1000000
 		WHEN LOWER("financial_reports.quarterly_currency") ILIKE '%thou%' THEN 1000
 		WHEN LOWER("financial_reports.quarterly_currency") ILIKE '%000%'  THEN 1000
-			ELSE 1 END AS DOUBLE) AS multiple_quarter,
+			ELSE 1 END AS NUMERIC) AS multipleQuarter,
 	----- QUARTERLY FINANCIAL STATEMENTS
-	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.quarterly_balance'), '[\"\,\[\]]', '', 'g'), ' ', 1) AS DOUBLE),
-	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.quarterly_balance'), '[\"\,\[\]]', '', 'g'), ' ', 2) AS DOUBLE),
-	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.quarterly_income'),  '[\"\,\[\]]', '', 'g'), ' ', 1) AS DOUBLE),
-	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.quarterly_income'),  '[\"\,\[\]]', '', 'g'), ' ', 2) AS DOUBLE),        
-	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.quarterly_income'),  '[\"\,\[\]]', '', 'g'), ' ', 3) AS DOUBLE),
-	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.quarterly_income'),  '[\"\,\[\]]', '', 'g'), ' ', 4) AS DOUBLE),
-
+	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.quarterly_balance'), '[\"\,\[\]]', '', 'g'), ' ', 1) AS NUMERIC),
+	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.quarterly_balance'), '[\"\,\[\]]', '', 'g'), ' ', 2) AS NUMERIC),
+	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.quarterly_income'),  '[\"\,\[\]]', '', 'g'), ' ', 1) AS NUMERIC),
+	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.quarterly_income'),  '[\"\,\[\]]', '', 'g'), ' ', 2) AS NUMERIC),        
+	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.quarterly_income'),  '[\"\,\[\]]', '', 'g'), ' ', 3) AS NUMERIC),
+	TRY_CAST(split_part(regexp_replace(COLUMNS('financial_reports.quarterly_income'),  '[\"\,\[\]]', '', 'g'), ' ', 4) AS NUMERIC),
+	--------------------------------------------------
 	----- LAST PRICE AND INDICATOR VALUES
-	Open, High, Low, Close, Chg, Gain, Loss, Value, Volume, MA20, RSI20, MA60, RSI60, MA240, RSI240, 
-	"Month High",    "Month Low",    "Month Chg High",    "Month Chg Low",    "Month Val High",    "Month Val Low",
-	"Quarter High",  "Quarter Low",  "Quarter Chg High",  "Quarter Chg Low",  "Quarter Val High",  "Quarter Val Low",
-	"Year High",     "Year Low",     "Year Chg High",     "Year Chg Low",     "Year Val High",     "Year Val Low",
-	"All Time High", "All Time Low", "All Time Chg High", "All Time Chg Low", "All Time Val High", "All Time Val Low", 
-	"Market RSI20",   "Market RSI60",   "Market RSI240", 
-	"Sector RSI20",   "Sector RSI60",   "Sector RSI240", 
-	"Industry RSI20", "Industry RSI60", "Industry RSI240", 
-	"Relative Month High",    "Relative Month Low",
-	"Relative Quarter High",  "Relative Quarter Low",
-	"Relative Year High",     "Relative Year Low", 
-	"Relative All Time High", "Relative All Time Low",
-	"Relative Market RSI 20",   "Relative Market RSI 60",   "Relative Market RSI 240",
-	"Relative Sector RSI 20",   "Relative Sector RSI 60",   "Relative Sector RSI 240", 
-	"Relative Industry RSI 20", "Relative Industry RSI 60", "Relative Industry RSI 240", 
+	Open, High, Low, Close, Chg, Gain, Loss, Value, Volume,
+	MA5, MA10, MA20, MA30, MA60, MA240, 
+	RSI5, RSI10, RSI20, RSI30, RSI60, RSI240, 
+	High5, High10, High20, High30, High60, High240, HighAll, 
+	Low5, Low10, Low20, Low30, Low60, Low240, LowAll, 
+	MarketRSI5, MarketRSI10, MarketRSI20, MarketRSI30, MarketRSI60, MarketRSI240, 
+	SectorRSI5, SectorRSI10, SectorRSI20, SectorRSI30, SectorRSI60, SectorRSI240, 
+	IndustryRSI5, IndustryRSI10, IndustryRSI20, IndustryRSI30, IndustryRSI60, IndustryRSI240, 
+	RelativeHigh5, RelativeHigh10, RelativeHigh20, RelativeHigh30, RelativeHigh60, RelativeHigh240, RelativeHighAll, 
+	RelativeLow5, RelativeLow10, RelativeLow20, RelativeLow30, RelativeLow60, RelativeLow240, RelativeLowAll, 
+	RelativeMarketRSI5, RelativeMarketRSI10, RelativeMarketRSI20, RelativeMarketRSI30, RelativeMarketRSI60, RelativeMarketRSI240, 
+	RelativeSectorRSI5, RelativeSectorRSI10, RelativeSectorRSI20, RelativeSectorRSI30, RelativeSectorRSI60, RelativeSectorRSI240, 
+	RelativeIndustryRSI5, RelativeIndustryRSI10, RelativeIndustryRSI20, RelativeIndustryRSI30, RelativeIndustryRSI60, RelativeIndustryRSI240, 
 
 FROM {{ ref('join_meta') }}

@@ -7,8 +7,10 @@
 ) }}
 
 SELECT *, 
-	ROUND(("Profitability Rank" + 
-	"Valuation Rank" + 
-	"Breadth Rank") / 3, 2) AS "Overall Rank"
+	ROUND((
+		RankProfitability + 
+		RankValuation + 
+		RankBreadth)
+			/ 3, 2) AS RankOverall
 FROM {{ ref('compute_agg_ranks') }}
-ORDER BY "Overall Rank" ASC
+ORDER BY RankOverall ASC

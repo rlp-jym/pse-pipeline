@@ -1,22 +1,22 @@
 WITH
 ratios AS (
 
-	SELECT * EXCLUDE ("CY Revenue", "CY Income"), 
-		ROUND(((Revenue / NULLIF("CY Revenue", 0)) - 1) * 100, 2) AS "Revenue Growth",
-		ROUND(((Income  / NULLIF("CY Income" , 0)) - 1) * 100, 2) AS "Income Growth",
-		ROUND(Income    / NULLIF(Revenue, 0) * 100, 2) AS "Income Margin", 
-		ROUND(Income    / NULLIF(Assets , 0) * 100, 2) AS "Return On Assets", 
-		ROUND(Income    / NULLIF(Equity , 0) * 100, 2) AS "Return On Equity", 
-		ROUND("Market Cap" / NULLIF(Revenue, 0), 2) AS "P/S", 
-		ROUND("Market Cap" / NULLIF(Income , 0), 2) AS "P/E", 
-		ROUND("Market Cap" / NULLIF(Equity , 0), 2) AS "P/BV"
+	SELECT * EXCLUDE (RevenueBase, IncomeBase), 
+		ROUND(((Revenue / NULLIF(RevenueBase, 0)) - 1) * 100, 2) AS GrowthRevenue,
+		ROUND(((Income  / NULLIF(IncomeBase,  0)) - 1) * 100, 2) AS GrowthIncome,
+		ROUND(Income    / NULLIF(Revenue, 0) * 100, 2) AS MarginIncome, 
+		ROUND(Income    / NULLIF(Assets , 0) * 100, 2) AS ReturnOnAssets, 
+		ROUND(Income    / NULLIF(Equity , 0) * 100, 2) AS ReturnOnEquity, 
+		ROUND(MarketCap / NULLIF(Revenue, 0), 2) AS PSRatio, 
+		ROUND(MarketCap / NULLIF(Income , 0), 2) AS PERatio, 
+		ROUND(MarketCap / NULLIF(Equity , 0), 2) AS PBVRatio
 		
 	 FROM {{ ref('union_agg') }}
 	 
 )
 
 SELECT *,
-	ROUND("P/S" / NULLIF("Revenue Growth", 0), 2) AS "PS/G",
-	ROUND("P/E" / NULLIF("Income Growth" , 0), 2) AS "PE/G"
+	ROUND(PSRatio / NULLIF(GrowthRevenue, 0), 2) AS PSGRatio,
+	ROUND(PERatio / NULLIF(GrowthIncome , 0), 2) AS PEGRatio
 	
 FROM ratios
