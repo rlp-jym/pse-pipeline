@@ -48,7 +48,7 @@ SELECT *,
 	ROUND(((RSI10  / IndustryRSI10)  - 1) * 100, 2) AS RelativeIndustryRSI10,
 	ROUND(((RSI20  / IndustryRSI20)  - 1) * 100, 2) AS RelativeIndustryRSI20,
 	ROUND(((RSI30  / IndustryRSI30)  - 1) * 100, 2) AS RelativeIndustryRSI30,
-	ROUND(((RSI60  / IndustrySI60)   - 1) * 100, 2) AS RelativeIndustryRSI60,
+	ROUND(((RSI60  / IndustryRSI60)   - 1) * 100, 2) AS RelativeIndustryRSI60,
 	ROUND(((RSI240 / IndustryRSI240) - 1) * 100, 2) AS RelativeIndustryRSI240
 
 FROM all_time_values
