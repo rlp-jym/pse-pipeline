@@ -14,10 +14,10 @@ all_time_values AS (
 
 SELECT *,
 	--------------------------------------------------
-	ROUND(((CandleRange   / CandleRange5)   - 1) * 100, 2) AS RelativeVolatility5,   ----- day to week range
-	ROUND(((CandleRange5  / CandleRange20)  - 1) * 100, 2) AS RelativeVolatility20,  ----- week to month range
-	ROUND(((CandleRange20 / CandleRange60)  - 1) * 100, 2) AS RelativeVolatility60,  ----- month to quarter range
-	ROUND(((CandleRange60 / CandleRange240) - 1) * 100, 2) AS RelativeVolatility240, ----- quarter to yearly range
+	ABS(ROUND(((CandleRange   / CandleRange5)   - 1) * 100, 2)) AS RelativeVolatility5,   ----- day to week range
+	ABS(ROUND(((CandleRange5  / CandleRange20)  - 1) * 100, 2)) AS RelativeVolatility20,  ----- week to month range
+	ABS(ROUND(((CandleRange20 / CandleRange60)  - 1) * 100, 2)) AS RelativeVolatility60,  ----- month to quarter range
+	ABS(ROUND(((CandleRange60 / CandleRange240) - 1) * 100, 2)) AS RelativeVolatility240, ----- quarter to yearly range
 	--------------------------------------------------
 	ROUND(((Close / High5)   - 1) * 100, 2) AS RelativeHigh5,
 	ROUND(((Close / High10)  - 1) * 100, 2) AS RelativeHigh10,
