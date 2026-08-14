@@ -109,6 +109,23 @@ compute240 AS (
 		ROWS BETWEEN 239 PRECEDING AND CURRENT ROW ----------> simplify, just 20x12
 	)
 
+),
+
+ranges AS (
+	
+	SELECT *
+		, High    - Low    AS CandleRange
+		, High5   - Low5   AS CandleRange5
+		, High10  - Low10  AS CandleRange10
+		, High20  - Low20  AS CandleRange20
+		, High30  - Low30  AS CandleRange30
+		, High60  - Low60  AS CandleRange60
+		, High120 - Low120 AS CandleRange120
+		, High240 - Low240 AS CandleRange240
+	
+	FROM compute240
+
 )
 
-SELECT * FROM compute240
+SELECT *
+FROM ranges

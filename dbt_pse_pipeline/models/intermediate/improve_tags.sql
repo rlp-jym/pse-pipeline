@@ -72,6 +72,7 @@ SELECT
 	IndustryRSI5, IndustryRSI10, IndustryRSI20, IndustryRSI30, IndustryRSI60, IndustryRSI120, IndustryRSI240, 
 	RelativeHigh5, RelativeHigh10, RelativeHigh20, RelativeHigh30, RelativeHigh60, RelativeHigh120, RelativeHigh240, RelativeHighAll, 
 	RelativeLow5, RelativeLow10, RelativeLow20, RelativeLow30, RelativeLow60, RelativeLow120, RelativeLow240, RelativeLowAll, 
+	RelativeVolatility5, RelativeVolatility20, RelativeVolatility60, RelativeVolatility240
 	RelativeMarketRSI5, RelativeMarketRSI10, RelativeMarketRSI20, RelativeMarketRSI30, RelativeMarketRSI60, RelativeMarketRSI120, RelativeMarketRSI240, 
 	RelativeSectorRSI5, RelativeSectorRSI10, RelativeSectorRSI20, RelativeSectorRSI30, RelativeSectorRSI60, RelativeSectorRSI120, RelativeSectorRSI240, 
 	RelativeIndustryRSI5, RelativeIndustryRSI10, RelativeIndustryRSI20, RelativeIndustryRSI30, RelativeIndustryRSI60, RelativeIndustryRSI120, RelativeIndustryRSI240, 

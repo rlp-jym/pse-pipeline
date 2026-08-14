@@ -94,7 +94,12 @@ SELECT
 	, TRY_CAST(ROUND(RelativeLow240, 2) AS NUMERIC) AS RelativeLow240
 	, TRY_CAST(ROUND(RelativeLowAll, 2) AS NUMERIC) AS RelativeLowAll
 	--------------------------------------------------
-    , TRY_CAST(ROUND(RelativeMarketRSI5,   2) AS NUMERIC) AS RelativeMarketRSI5
+	, TRY_CAST(ROUND(RelativeVolatility5,   2) AS NUMERIC) AS RelativeVolatility5
+	, TRY_CAST(ROUND(RelativeVolatility20,  2) AS NUMERIC) AS RelativeVolatility20
+	, TRY_CAST(ROUND(RelativeVolatility60,  2) AS NUMERIC) AS RelativeVolatility60
+	, TRY_CAST(ROUND(RelativeVolatility240, 2) AS NUMERIC) AS RelativeVolatility240
+	--------------------------------------------------
+	, TRY_CAST(ROUND(RelativeMarketRSI5,   2) AS NUMERIC) AS RelativeMarketRSI5
 	, TRY_CAST(ROUND(RelativeMarketRSI10,  2) AS NUMERIC) AS RelativeMarketRSI10
 	, TRY_CAST(ROUND(RelativeMarketRSI20,  2) AS NUMERIC) AS RelativeMarketRSI20
 	, TRY_CAST(ROUND(RelativeMarketRSI30,  2) AS NUMERIC) AS RelativeMarketRSI30
